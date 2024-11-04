@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../data/network/entity/http_paged_result.dart';
-import '../domain/base_stats.dart';
+import 'base_stats.dart';
 
 part 'pokemon.freezed.dart';
 part 'pokemon.g.dart';

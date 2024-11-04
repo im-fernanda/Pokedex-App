@@ -1,18 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../../../domain/pokemon.dart';
-import '../../../domain/base_stats.dart';
 
 part 'http_paged_result.g.dart';
 
 @JsonSerializable()
 class HttpPagedResult {
-  final int first;
-  final dynamic prev;
-  final int next;
-  final int last;
-  final int pages;
-  final int items;
-  final List<PokemonEntity> data;
+  int first;
+  dynamic prev;
+  int next;
+  int last;
+  int pages;
+  int items;
+  List<PokemonEntity> data;
 
   HttpPagedResult({
     required this.first,
@@ -31,10 +29,9 @@ class HttpPagedResult {
 @JsonSerializable()
 class PokemonEntity {
   final int id;
-  final Map<String, String>
-      name; // Alterado para Map<String, String> para suportar diferentes idiomas
-  final List<String> type; // Tipos do Pokémon
-  final BaseStats base; // Estatísticas base
+  final Name name;
+  final List<String> type;
+  final Base base;
 
   PokemonEntity({
     required this.id,
@@ -43,6 +40,72 @@ class PokemonEntity {
     required this.base,
   });
 
-  factory PokemonEntity.fromJson(Map<String, dynamic> json) =>
-      _$PokemonEntityFromJson(json);
+  factory PokemonEntity.fromJson(Map<String, dynamic> json) {
+    return PokemonEntity(
+      id: int.parse(json['id']),
+      name: Name.fromJson(json['name']),
+      type: List<String>.from(json['type'] ?? []),
+      base: Base.fromJson(json['base']),
+    );
+  }
+
+  Map<String, dynamic> toJson() => _$PokemonEntityToJson(this);
+}
+
+@JsonSerializable()
+class Name {
+  final String english;
+  final String japanese;
+  final String chinese;
+  final String french;
+
+  Name({
+    required this.english,
+    required this.japanese,
+    required this.chinese,
+    required this.french,
+  });
+
+  factory Name.fromJson(Map<String, dynamic> json) => _$NameFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NameToJson(this);
+}
+
+@JsonSerializable()
+class Base {
+  final int hp;
+  final int attack;
+  final int defense;
+  final int spAttack;
+  final int spDefense;
+  final int speed;
+
+  Base({
+    required this.hp,
+    required this.attack,
+    required this.defense,
+    required this.spAttack,
+    required this.spDefense,
+    required this.speed,
+  });
+
+  factory Base.fromJson(Map<String, dynamic> json) {
+    return Base(
+      hp: json['HP'] ?? 0,
+      attack: json['Attack'] ?? 0,
+      defense: json['Defense'] ?? 0,
+      spAttack: json['Sp. Attack'] ?? 0,
+      spDefense: json['Sp. Defense'] ?? 0,
+      speed: json['Speed'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'HP': hp,
+    'Attack': attack,
+    'Defense': defense,
+    'Sp. Attack': spAttack,
+    'Sp. Defense': spDefense,
+    'Speed': speed,
+  };
 }

@@ -7,23 +7,20 @@ class DatabaseMapper {
   // Converte uma PokemonDatabaseEntity em um objeto Pokemon
   Pokemon toPokemon(PokemonDatabaseEntity entity) {
     try {
-      // Aqui, estamos criando um objeto BaseStats usando os campos diretos da entidade
       final baseStats = BaseStats(
-        hp: entity.hp,
-        attack: entity.attack,
-        defense: entity.defense,
-        spAttack: entity.spAttack,
-        spDefense: entity.spDefense,
-        speed: entity.speed,
+        hp: entity.hp ?? 0,
+        attack: entity.attack ?? 0,
+        defense: entity.defense ?? 0,
+        spAttack: entity.spAttack ?? 0,
+        spDefense: entity.spDefense ?? 0,
+        speed: entity.speed ?? 0,
       );
 
       return Pokemon(
-        id: entity.id ??
-            0, // Se o ID for null, defina como 0 ou trate conforme necessário
+        id: entity.id ?? 0,
         name: entity.name,
-        type: entity
-            .type, // Certifique-se de que o tipo está no formato correto (List<String>)
-        base: baseStats, // Passando o objeto BaseStats
+        type: entity.type,
+        base: baseStats,
       );
     } catch (e) {
       throw MapperException<PokemonDatabaseEntity, Pokemon>(e.toString());
@@ -32,11 +29,7 @@ class DatabaseMapper {
 
   // Converte uma lista de PokemonDatabaseEntity em uma lista de Pokemon
   List<Pokemon> toPokemons(List<PokemonDatabaseEntity> entities) {
-    final List<Pokemon> pokemons = [];
-    for (var pokemonEntity in entities) {
-      pokemons.add(toPokemon(pokemonEntity));
-    }
-    return pokemons;
+    return entities.map(toPokemon).toList();
   }
 
   // Converte um objeto Pokemon em uma PokemonDatabaseEntity
@@ -46,8 +39,8 @@ class DatabaseMapper {
         id: null, // Se você não estiver gerando o ID aqui, mantenha como null
         name: pokemon.name,
         type: pokemon
-            .type, // Certifique-se de que o tipo está no formato correto (List<String>)
-        hp: pokemon.base.hp, // Acessando os atributos de BaseStats diretamente
+            .type, // Certifique-se de que type esteja no formato correto (List<String>)
+        hp: pokemon.base.hp, // Acessa os atributos de BaseStats diretamente
         attack: pokemon.base.attack,
         defense: pokemon.base.defense,
         spAttack: pokemon.base.spAttack,
@@ -62,10 +55,6 @@ class DatabaseMapper {
   // Converte uma lista de Pokemon em uma lista de PokemonDatabaseEntity
   List<PokemonDatabaseEntity> toPokemonDatabaseEntities(
       List<Pokemon> pokemons) {
-    final List<PokemonDatabaseEntity> pokemonDatabaseEntities = [];
-    for (var p in pokemons) {
-      pokemonDatabaseEntities.add(toPokemonDatabaseEntity(p));
-    }
-    return pokemonDatabaseEntities;
+    return pokemons.map(toPokemonDatabaseEntity).toList();
   }
 }

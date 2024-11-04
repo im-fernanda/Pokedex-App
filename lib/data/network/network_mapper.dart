@@ -7,15 +7,23 @@ class NetworkMapper {
   // Converte uma entidade da rede (obtida da API) em um objeto Pokemon
   Pokemon toPokemon(PokemonEntity entity) {
     try {
-      // Usa o método fromJson de BaseStats para criar uma instância a partir do Map
-      final baseStats = BaseStats.fromJson(entity.base as Map<String, dynamic>);
+      // Cria uma instância de BaseStats com valores padrão, caso algum atributo seja nulo
+      final baseStats = BaseStats(
+        hp: entity.base.hp ?? 0,
+        attack: entity.base.attack ?? 0,
+        defense: entity.base.defense ?? 0,
+        spAttack: entity.base.spAttack ?? 0,
+        spDefense: entity.base.spDefense ?? 0,
+        speed: entity.base.speed ?? 0,
+      );
 
-      // Retorna uma instância de Pokemon com base nos dados da entidade e em baseStats
+      // Retorna uma instância de Pokemon com base nos dados da entidade e no BaseStats
       return Pokemon(
         id: entity.id,
-        name: entity.name['english'] ??
-            'Unknown', // Usa o nome em inglês, ou "Unknown" se não disponível
-        type: entity.type,
+        name: entity.name.english ??
+            'Unknown', // Usa "Unknown" se o nome em inglês for nulo
+        type: entity.type ??
+            [], // Garante que type seja uma lista vazia se for nulo
         base: baseStats,
       );
     } catch (e) {

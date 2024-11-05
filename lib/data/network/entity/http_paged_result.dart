@@ -28,9 +28,9 @@ class HttpPagedResult {
 
 @JsonSerializable()
 class PokemonEntity {
-  final int id;
+  final String id;
   final Name name;
-  final List<String> type;
+  final List<String>? type;
   final Base base;
 
   PokemonEntity({
@@ -40,16 +40,10 @@ class PokemonEntity {
     required this.base,
   });
 
-  factory PokemonEntity.fromJson(Map<String, dynamic> json) {
-    return PokemonEntity(
-      id: int.parse(json['id']),
-      name: Name.fromJson(json['name']),
-      type: List<String>.from(json['type'] ?? []),
-      base: Base.fromJson(json['base']),
-    );
-  }
+  factory PokemonEntity.fromJson(Map<String, dynamic> json) =>
+      _$PokemonEntityFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PokemonEntityToJson(this);
+  //Map<String, dynamic> toJson() => _$PokemonEntityToJson(this);
 }
 
 @JsonSerializable()
@@ -101,11 +95,11 @@ class Base {
   }
 
   Map<String, dynamic> toJson() => {
-    'HP': hp,
-    'Attack': attack,
-    'Defense': defense,
-    'Sp. Attack': spAttack,
-    'Sp. Defense': spDefense,
-    'Speed': speed,
-  };
+        'HP': hp,
+        'Attack': attack,
+        'Defense': defense,
+        'Sp. Attack': spAttack,
+        'Sp. Defense': spDefense,
+        'Speed': speed,
+      };
 }

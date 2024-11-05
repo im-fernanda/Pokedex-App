@@ -19,7 +19,7 @@ class NetworkMapper {
 
       // Retorna uma instância de Pokemon com base nos dados da entidade e no BaseStats
       return Pokemon(
-        id: entity.id,
+        id: int.parse(entity.id),
         name: entity.name.english ??
             'Unknown', // Usa "Unknown" se o nome em inglês for nulo
         type: entity.type ??

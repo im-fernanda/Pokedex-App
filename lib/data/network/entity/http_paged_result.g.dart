@@ -32,9 +32,9 @@ Map<String, dynamic> _$HttpPagedResultToJson(HttpPagedResult instance) =>
 
 PokemonEntity _$PokemonEntityFromJson(Map<String, dynamic> json) =>
     PokemonEntity(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as String,
       name: Name.fromJson(json['name'] as Map<String, dynamic>),
-      type: (json['type'] as List<dynamic>).map((e) => e as String).toList(),
+      type: (json['type'] as List<dynamic>?)?.map((e) => e as String).toList(),
       base: Base.fromJson(json['base'] as Map<String, dynamic>),
     );
 

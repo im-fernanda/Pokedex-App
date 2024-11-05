@@ -8,18 +8,23 @@ class DatabaseMapper {
   Pokemon toPokemon(PokemonDatabaseEntity entity) {
     try {
       final baseStats = BaseStats(
-        hp: entity.hp ?? 0,
-        attack: entity.attack ?? 0,
-        defense: entity.defense ?? 0,
-        spAttack: entity.spAttack ?? 0,
-        spDefense: entity.spDefense ?? 0,
-        speed: entity.speed ?? 0,
+        hp: int.parse(entity.hp.toString()),
+        attack: int.parse(entity.attack.toString()),
+        defense: int.parse(entity.defense.toString()),
+        spAttack: int.parse(entity.spAttack.toString()),
+        spDefense: int.parse(entity.spDefense.toString()),
+        speed: int.parse(entity.speed.toString()),
       );
+
+      final types = [
+        entity.type1,
+        if (entity.type2 != null) entity.type2!,
+      ];
 
       return Pokemon(
         id: entity.id,
         name: entity.name,
-        type: entity.type,
+        type: types,
         base: baseStats,
       );
     } catch (e) {
@@ -38,7 +43,10 @@ class DatabaseMapper {
       return PokemonDatabaseEntity(
         id: pokemon.id,
         name: pokemon.name,
-        type: pokemon.type,
+        type1: pokemon.type[0],
+        type2: pokemon.type.length > 1
+            ? pokemon.type[1]
+            : null, // Pega o segundo tipo se existir
         hp: pokemon.base.hp,
         attack: pokemon.base.attack,
         defense: pokemon.base.defense,

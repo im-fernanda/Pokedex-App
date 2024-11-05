@@ -33,13 +33,14 @@ abstract class BaseDao {
       CREATE TABLE ${PokemonDatabaseContract.pokemonTable} (
         ${PokemonDatabaseContract.idColumn} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${PokemonDatabaseContract.nameColumn} TEXT NOT NULL,
-        ${PokemonDatabaseContract.hpColumn} INTEGER NOT NULL,
-        ${PokemonDatabaseContract.attackColumn} INTEGER NOT NULL,
-        ${PokemonDatabaseContract.defenseColumn} INTEGER NOT NULL,
-        ${PokemonDatabaseContract.spAttackColumn} INTEGER NOT NULL,
-        ${PokemonDatabaseContract.spDefenseColumn} INTEGER NOT NULL,
-        ${PokemonDatabaseContract.speedColumn} INTEGER NOT NULL,
-        ${PokemonDatabaseContract.typeColumn} TEXT NOT NULL 
+        ${PokemonDatabaseContract.hpColumn} INTEGER,
+        ${PokemonDatabaseContract.attackColumn} INTEGER,
+        ${PokemonDatabaseContract.defenseColumn} INTEGER,
+        ${PokemonDatabaseContract.spAttackColumn} INTEGER,
+        ${PokemonDatabaseContract.spDefenseColumn} INTEGER,
+        ${PokemonDatabaseContract.speedColumn} INTEGER,
+        ${PokemonDatabaseContract.type1Column} TEXT,
+        ${PokemonDatabaseContract.type2Column} TEXT
       );
       ''',
     );

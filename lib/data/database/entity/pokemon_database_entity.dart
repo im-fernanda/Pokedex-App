@@ -10,8 +10,10 @@ class PokemonDatabaseEntity {
   @JsonKey(name: PokemonDatabaseContract.nameColumn)
   final String name;
 
-  @JsonKey(name: PokemonDatabaseContract.typeColumn)
-  final List<String> type;
+  @JsonKey(name: PokemonDatabaseContract.type1Column)
+  final String type1;
+  @JsonKey(name: PokemonDatabaseContract.type2Column)
+  final String? type2;
 
   @JsonKey(name: PokemonDatabaseContract.hpColumn)
   final int hp;
@@ -29,7 +31,8 @@ class PokemonDatabaseEntity {
   PokemonDatabaseEntity({
     required this.id,
     required this.name,
-    required this.type,
+    required this.type1,
+    required this.type2,
     required this.hp,
     required this.attack,
     required this.defense,
@@ -48,7 +51,8 @@ abstract class PokemonDatabaseContract {
   static const String pokemonTable = "pokemon_table";
   static const String idColumn = "id";
   static const String nameColumn = "name";
-  static const String typeColumn = "type";
+  static const String type1Column = "type1";
+  static const String type2Column = "type2";
   static const String hpColumn = "hp";
   static const String attackColumn = "attack";
   static const String defenseColumn = "defense";

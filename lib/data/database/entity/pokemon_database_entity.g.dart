@@ -9,7 +9,7 @@ part of 'pokemon_database_entity.dart';
 PokemonDatabaseEntity _$PokemonDatabaseEntityFromJson(
         Map<String, dynamic> json) =>
     PokemonDatabaseEntity(
-      id: (json['id'] as num?)?.toInt(),
+      id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       type: (json['type'] as List<dynamic>).map((e) => e as String).toList(),
       hp: (json['hp'] as num).toInt(),

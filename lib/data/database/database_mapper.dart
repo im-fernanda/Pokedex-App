@@ -17,7 +17,7 @@ class DatabaseMapper {
       );
 
       return Pokemon(
-        id: entity.id ?? 0,
+        id: entity.id,
         name: entity.name,
         type: entity.type,
         base: baseStats,
@@ -36,7 +36,7 @@ class DatabaseMapper {
   PokemonDatabaseEntity toPokemonDatabaseEntity(Pokemon pokemon) {
     try {
       return PokemonDatabaseEntity(
-        id: null,
+        id: pokemon.id,
         name: pokemon.name,
         type: pokemon.type,
         hp: pokemon.base.hp,

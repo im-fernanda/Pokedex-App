@@ -5,7 +5,7 @@ part 'pokemon_database_entity.g.dart';
 @JsonSerializable()
 class PokemonDatabaseEntity {
   @JsonKey(name: PokemonDatabaseContract.idColumn)
-  final int? id;
+  final int id;
 
   @JsonKey(name: PokemonDatabaseContract.nameColumn)
   final String name;

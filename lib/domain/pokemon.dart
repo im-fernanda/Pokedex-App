@@ -16,47 +16,47 @@ class Pokemon {
   });
 
   // Método para obter a cor base de acordo com o tipo
-  Color? get baseColor => _color(type: type[0]);
+  Color? get baseColor => colorFromType(type: type[0]);
 
   // Método estático para determinar a cor com base no tipo
-  static Color? _color({required String type}) {
+  static Color? colorFromType({required String type}) {
     switch (type) {
       case 'Normal':
         return Colors.brown[400];
       case 'Fire':
-        return Colors.red;
+        return Color(0xFFFFA756);
       case 'Water':
-        return Colors.blue;
+        return Color(0xFF58ABF6);
       case 'Grass':
-        return Colors.green;
+        return Color(0xFF8BBE8A);
       case 'Electric':
-        return Colors.amber;
+        return Color(0xFFF2CB55);
       case 'Ice':
-        return Colors.cyanAccent[400];
+        return Color(0xFF83D0F7);
       case 'Fighting':
-        return Colors.orange;
+        return Color(0xFFEB4971);
       case 'Poison':
-        return Colors.purple;
+        return Color(0xFFA553CC);
       case 'Ground':
-        return Colors.orange[300];
+        return Color(0xFFF78551);
       case 'Flying':
-        return Colors.indigo[200];
+        return Color(0xFFCC6D2E);
       case 'Psychic':
-        return Colors.pink;
+        return Color(0xFFF95587);
       case 'Bug':
-        return Colors.lightGreen[500];
+        return Color(0xFF8BD674);
       case 'Rock':
-        return Colors.grey;
+        return Color(0xFF8A898F);
       case 'Ghost':
-        return Colors.indigo[400];
+        return Color(0xFF705898);
       case 'Dark':
-        return Colors.brown;
+        return Color(0xFF674E4D);
       case 'Dragon':
-        return Colors.indigo[800];
+        return Color(0xFF6F35FC);
       case 'Steel':
-        return Colors.blueGrey;
+        return Color(0xFFB7B7CE);
       case 'Fairy':
-        return Colors.pinkAccent[100];
+        return Color(0xFFD685AD);
       default:
         return Colors.grey; // Cor padrão
     }

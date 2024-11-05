@@ -36,11 +36,10 @@ class DatabaseMapper {
   PokemonDatabaseEntity toPokemonDatabaseEntity(Pokemon pokemon) {
     try {
       return PokemonDatabaseEntity(
-        id: null, // Se você não estiver gerando o ID aqui, mantenha como null
+        id: null,
         name: pokemon.name,
-        type: pokemon
-            .type, // Certifique-se de que type esteja no formato correto (List<String>)
-        hp: pokemon.base.hp, // Acessa os atributos de BaseStats diretamente
+        type: pokemon.type,
+        hp: pokemon.base.hp,
         attack: pokemon.base.attack,
         defense: pokemon.base.defense,
         spAttack: pokemon.base.spAttack,

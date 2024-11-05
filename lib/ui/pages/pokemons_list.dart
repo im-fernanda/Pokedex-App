@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pokedex_app/ui/pages/pokemon_details_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/repository/pokemon_repository_impl.dart';
 import '../../domain/pokemon.dart';
 import 'widgets/pokemon_card.dart';
 
-class PokemonsListPage extends StatefulWidget {
-  const PokemonsListPage({super.key});
+class PokemonListPage extends StatefulWidget {
+  const PokemonListPage({super.key});
 
   @override
-  State<PokemonsListPage> createState() => _PokemonsListPageState();
+  State<PokemonListPage> createState() => _PokemonListPageState();
 }
 
-class _PokemonsListPageState extends State<PokemonsListPage> {
+class _PokemonListPageState extends State<PokemonListPage> {
   late final PokemonRepositoryImpl pokemonsRepo;
   late final PagingController<int, Pokemon> _pagingController =
       PagingController(firstPageKey: 1);
@@ -45,17 +46,29 @@ class _PokemonsListPageState extends State<PokemonsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pokémons"),
-        backgroundColor: Theme.of(context).primaryColorLight,
-      ),
-      body: PagedListView<int, Pokemon>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Pokemon>(
-          itemBuilder: (context, pokemon, index) =>
-              PokemonCard(pokemon: pokemon),
+        appBar: AppBar(
+          title: const Text("Pokédex"),
+          backgroundColor: Color(0xFFFFFFFF),
         ),
-      ),
-    );
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: PagedListView<int, Pokemon>(
+            pagingController: _pagingController,
+            builderDelegate: PagedChildBuilderDelegate<Pokemon>(
+              itemBuilder: (context, pokemon, index) => GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PokemonDetailsPage(pokemon: pokemon),
+                    ),
+                  );
+                },
+                child: PokemonCard(pokemon: pokemon),
+              ),
+            ),
+          ),
+        ));
   }
 }

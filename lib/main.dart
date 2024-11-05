@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex_app/pages/home/home_page.dart';
-import 'package:pokedex_app/pages/pokemons_list.dart';
+import 'package:pokedex_app/ui/pages/home/home_page.dart';
+import 'package:pokedex_app/ui/pages/pokemons_list.dart';
+import 'package:pokedex_app/ui/pages/pokemon_details_page.dart';
 import 'package:provider/provider.dart';
 
 import 'core/di/configure_providers.dart';
@@ -22,33 +23,42 @@ class AppRoot extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: data.providers,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Fernandas Pokedex',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
-          useMaterial3: true,
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.amber, // Define a cor âmbar para a AppBar
-            foregroundColor:
-                Colors.black, // Define a cor do texto e ícones na AppBar
-            elevation: 4, // Elevação para dar um leve sombreamento
-          ),
-          textTheme: TextTheme(
-            titleLarge: TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-            bodyMedium: TextStyle(fontSize: 16, color: Colors.grey.shade200),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.amber,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
+      child: MyApp(),
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Fernanda's Pokedex",
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/pokedex': (context) => PokemonListPage(),
+        // Adicione outras rotas como '/encontroDiario' e '/myPokemons'
+      },
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
+        useMaterial3: true,
+        appBarTheme: AppBarTheme(
+          elevation: 4,
+        ),
+        textTheme: TextTheme(
+          titleLarge: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+          bodyMedium: TextStyle(fontSize: 16, color: Colors.grey.shade200),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Color(0xFF355DAA),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           ),
         ),
-        home: const PokemonsListPage(),
       ),
     );
   }

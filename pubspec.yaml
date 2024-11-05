@@ -57,6 +57,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  awesome_dialog: ^3.2.1
   build_runner: ^2.4.13
   freezed: ^2.5.7
   json_serializable: ^6.8.0

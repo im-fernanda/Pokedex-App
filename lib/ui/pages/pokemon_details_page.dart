@@ -28,7 +28,7 @@ class PokemonDetailsPage extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.3,
+            height: MediaQuery.of(context).size.height * 0.28,
             color: pokemon.baseColor,
           ),
           SafeArea(
@@ -89,7 +89,7 @@ class PokemonDetailsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24),

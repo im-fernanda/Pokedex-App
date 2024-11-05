@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
   Widget _buildNavigationButton(BuildContext context,
       {required String title, required String routeName}) {
     return SizedBox(
-      width: 250, // Defina a largura desejada aqui
+      width: 250,
       child: ElevatedButton(
         onPressed: () => Navigator.pushNamed(context, routeName),
         style: ElevatedButton.styleFrom(

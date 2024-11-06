@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/data/network/client/api_client.dart';
+import 'package:pokedex_app/ui/pages/widgets/pokemon_card.dart';
 import '../../data/database/dao/captured_pokemon_dao.dart';
-import '../../data/database/dao/pokemon_dao.dart';
-import '../../data/database/database_mapper.dart';
 import '../../domain/pokemon.dart';
-import 'pokemon_details_page.dart';
+import 'widgets/pokemon_card.dart'; // Importe o widget PokemonCard
 
 class MyPokemonsPage extends StatefulWidget {
   @override
@@ -23,10 +22,8 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
 
   // Método para buscar os Pokémon capturados
   Future<void> _fetchCapturedPokemons() async {
-    // Instancia os DAOs necessários
     final capturedPokemonDao = CapturedPokemonDao();
     final apiClient = ApiClient(baseUrl: 'http://192.168.0.8:3000');
-    final databaseMapper = DatabaseMapper();
 
     try {
       // Obtém os IDs dos Pokémon capturados
@@ -37,11 +34,8 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
 
       // Para cada ID capturado, obtém os detalhes do Pokémon
       for (var id in capturedPokemonIds) {
-        //Retorna DBEntity
         final pokemon = await apiClient.getPokemonById(id);
-        if (pokemon != null) {
-          capturedPokemons.add(pokemon);
-        }
+        capturedPokemons.add(pokemon);
       }
 
       // Atualiza o estado com a lista de Pokémon capturados
@@ -72,23 +66,10 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
                   itemCount: _capturedPokemons.length,
                   itemBuilder: (context, index) {
                     final pokemon = _capturedPokemons[index];
-                    return Card(
-                      child: ListTile(
-                        leading:
-                            Image.network(pokemon.imgUrl), // Imagem do Pokémon
-                        title: Text(pokemon.name), // Nome do Pokémon
-                        subtitle: Text("ID: ${pokemon.id}"),
-                        onTap: () {
-                          // Navega para a página de detalhes ao tocar no card
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PokemonDetailsPage(pokemon: pokemon),
-                            ),
-                          );
-                        },
-                      ),
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child:
+                          PokemonCard(pokemon: pokemon), // Usando o PokemonCard
                     );
                   },
                 ),

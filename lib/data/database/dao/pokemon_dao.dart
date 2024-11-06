@@ -2,7 +2,6 @@ import 'package:pokedex_app/data/database/dao/base_dao.dart';
 import 'package:pokedex_app/data/database/entity/pokemon_database_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'captured_pokemon_dao.dart';
 
 class PokemonDao extends BaseDao {
   Future<List<PokemonDatabaseEntity>> selectAll({

@@ -63,8 +63,8 @@ class PokemonCard extends StatelessWidget {
                               }).toList(),
                             ),
                             const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                               ),

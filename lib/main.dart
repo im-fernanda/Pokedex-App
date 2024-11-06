@@ -38,17 +38,17 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
-        '/pokedex': (context) => PokemonListPage(),
+        '/pokedex': (context) => const PokemonListPage(),
         '/encontroDiario': (context) => EncontroDiarioPage(),
         '/myPokemons': (context) => MyPokemonsPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
         useMaterial3: true,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           elevation: 4,
         ),
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           titleLarge: TextStyle(
               fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
           bodyMedium: TextStyle(fontSize: 16, color: Colors.black),
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: Color(0xFF355DAA),
+            backgroundColor: const Color(0xFF355DAA),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           ),

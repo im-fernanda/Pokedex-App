@@ -63,27 +63,31 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
           ? const Center(child: CircularProgressIndicator())
           : _capturedPokemons.isEmpty
               ? const Center(child: Text('Nenhum Pokémon capturado ainda.'))
-              : ListView.builder(
-                  itemCount: _capturedPokemons.length,
-                  itemBuilder: (context, index) {
-                    final pokemon = _capturedPokemons[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: PokemonCard(
-                        pokemon: pokemon,
-                        onTap: () {
-                          // Navega para a página de detalhes ao tocar no card
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PokemonDetailsPage(pokemon: pokemon),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+              : SingleChildScrollView(
+                  // Use SingleChildScrollView para garantir que o conteúdo seja rolável
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: _capturedPokemons.map((pokemon) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: PokemonCard(
+                            pokemon: pokemon,
+                            onTap: () {
+                              // Navega para a página de detalhes ao tocar no card
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PokemonDetailsPage(pokemon: pokemon),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
     );
   }

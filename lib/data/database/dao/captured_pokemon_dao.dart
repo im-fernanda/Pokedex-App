@@ -14,6 +14,12 @@ class CapturedPokemonDao extends BaseDao {
     return result.isNotEmpty;
   }
 
+  // Verificar se a Pokédex está cheia
+  Future<bool> isPokedexFull() async {
+    final capturedPokemons = await getCapturedPokemonIds();
+    return capturedPokemons.length >= 6;
+  }
+
   //Método para captura
   Future<void> capturePokemon(int pokemonId) async {
     final isCaptured = await isPokemonCaptured(pokemonId);

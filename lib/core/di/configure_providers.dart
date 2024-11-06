@@ -1,6 +1,5 @@
 import 'package:pokedex_app/data/database/dao/captured_pokemon_dao.dart';
 import 'package:pokedex_app/data/database/dao/pokemon_dao.dart';
-import 'package:pokedex_app/data/database/dao/captured_pokemon_dao.dart';
 import 'package:pokedex_app/data/database/database_mapper.dart';
 import 'package:pokedex_app/data/network/client/api_client.dart';
 import 'package:pokedex_app/data/network/network_mapper.dart';

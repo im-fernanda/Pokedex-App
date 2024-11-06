@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:pokedex_app/data/database/dao/pokemon_dao.dart';
 import 'package:pokedex_app/data/database/database_mapper.dart';
 import 'package:pokedex_app/data/network/client/api_client.dart';
+import 'package:pokedex_app/data/network/entity/http_paged_result.dart';
 import 'package:pokedex_app/data/network/network_mapper.dart';
 import 'package:pokedex_app/data/repository/pokemon_repository.dart';
 import '../../domain/exception/mapper_exception.dart';
@@ -76,22 +77,19 @@ class PokemonRepositoryImpl implements IPokemonRepository {
 
   Future<Pokemon> pokemonOfTheDay() async {
     try {
-      // Sorteia um número entre 1 e 809
+      // Sorteia um número entre 1 e 809 (considerando que há 809 Pokémon disponíveis)
       final random = Random();
-      final randomId = random.nextInt(15) + 1;
+      final int randomId =
+          random.nextInt(809) + 1; // Ajuste para o range de IDs
 
-      // Formata o ID para ter 3 dígitos
-      final formattedId = randomId.toString().padLeft(3, '0');
+      print("ID sorteado: $randomId");
 
-      // Busca o Pokémon com o ID sorteado no banco de dados
-      final pokemonEntity =
-          await pokemonDao.getPokemonById(int.parse(formattedId));
+      // Busca o Pokémon com o ID sorteado na API
+      final pokemonFromApi = await apiClient.getPokemonById(randomId);
 
-      // Mapeia a entidade do banco para o modelo de domínio
-      return databaseMapper.toPokemon(pokemonEntity);
+      return pokemonFromApi; // Retorna o Pokémon sorteado
     } catch (e) {
-      throw MapperException<PokemonDatabaseEntity, Pokemon>(
-          "Erro ao buscar o Pokémon do dia: ${e.toString()}");
+      throw Exception("Erro ao buscar Pokémon do dia: ${e.toString()}");
     }
   }
 }

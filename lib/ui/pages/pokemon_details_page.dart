@@ -4,8 +4,6 @@ import 'package:pokedex_app/ui/utils/stat_color.dart';
 import 'package:pokedex_app/ui/pages/widgets/pokemon_type_icon.dart';
 import '../../domain/pokemon.dart';
 
-import '../../domain/pokemon.dart';
-
 class PokemonDetailsPage extends StatelessWidget {
   final Pokemon pokemon;
 
@@ -14,8 +12,6 @@ class PokemonDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formattedId = pokemon.id.toString().padLeft(3, '0');
-    String imageUrl =
-        'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/$formattedId.png';
 
     int totalStats = pokemon.base.hp +
         pokemon.base.attack +
@@ -46,7 +42,7 @@ class PokemonDetailsPage extends StatelessWidget {
                   ),
                   Center(
                     child: Image.network(
-                      imageUrl,
+                      pokemon.imgUrl,
                       width: 200,
                       height: 200,
                       errorBuilder: (context, error, stackTrace) =>

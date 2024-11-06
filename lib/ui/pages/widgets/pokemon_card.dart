@@ -13,9 +13,6 @@ class PokemonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Formata o ID do Pokémon para três dígitos
     String formattedId = pokemon.id.toString().padLeft(3, '0');
-    // URL da imagem do Pokémon usando o ID formatado
-    String imageUrl =
-        'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/$formattedId.png';
 
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
@@ -84,7 +81,7 @@ class PokemonCard extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: CachedNetworkImage(
-                            imageUrl: imageUrl,
+                            imageUrl: pokemon.imgUrl,
                             placeholder: (context, url) =>
                                 const CircularProgressIndicator(),
                             errorWidget: (context, url, error) => const Icon(

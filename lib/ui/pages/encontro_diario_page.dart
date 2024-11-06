@@ -18,11 +18,13 @@ class EncontroDiarioPage extends StatefulWidget {
 class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
   late Pokemon _pokemon; // Pokémon da camada de domínio
   bool _isLoading = true; // Flag para mostrar o carregamento
+  late CapturedPokemonDao capturedPokemonDao;
 
   @override
   void initState() {
     super.initState();
-    _fetchPokemonOfTheDay(); // Chama a função para buscar o Pokémon do dia
+    capturedPokemonDao = CapturedPokemonDao();
+    _fetchPokemonOfTheDay();
   }
 
   // Método para buscar o Pokémon do dia
@@ -47,7 +49,7 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
     try {
       // Obtendo o Pokémon do dia do repositório
       final pokemonEntity = await pokemonRepository.pokemonOfTheDay();
-
+      print("Pokémon do dia: ${pokemonEntity.name}");
       _pokemon = pokemonEntity;
 
       setState(() {
@@ -95,7 +97,8 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                           btnCancelOnPress: () {},
                           btnOkOnPress: () async {
                             // Aqui você pode adicionar a lógica para pegar o Pokémon
-                            //await _capturePokemon(_pokemon);
+                            await capturedPokemonDao
+                                .capturePokemon(_pokemon.id);
 
                             final snackBar = SnackBar(
                               content: Text('${_pokemon.name} foi pego!'),

@@ -9,19 +9,17 @@ class NetworkMapper {
     try {
       // Cria uma instância de BaseStats com valores padrão, caso algum atributo seja nulo
       final baseStats = BaseStats(
-        hp: entity.base.hp ?? 0,
-        attack: entity.base.attack ?? 0,
-        defense: entity.base.defense ?? 0,
-        spAttack: entity.base.spAttack ?? 0,
-        spDefense: entity.base.spDefense ?? 0,
-        speed: entity.base.speed ?? 0,
-      );
+          hp: entity.base.hp,
+          attack: entity.base.attack,
+          defense: entity.base.defense,
+          spAttack: entity.base.spAttack,
+          spDefense: entity.base.spDefense,
+          speed: entity.base.speed);
 
       // Retorna uma instância de Pokemon com base nos dados da entidade e no BaseStats
       return Pokemon(
         id: int.parse(entity.id),
-        name: entity.name.english ??
-            'Unknown', // Usa "Unknown" se o nome em inglês for nulo
+        name: entity.name.english,
         type: entity.type ??
             [], // Garante que type seja uma lista vazia se for nulo
         base: baseStats,

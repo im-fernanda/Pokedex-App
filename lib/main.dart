@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/ui/pages/encontro_diario_page.dart';
 import 'package:pokedex_app/ui/pages/home/home_page.dart';
+import 'package:pokedex_app/ui/pages/my_pokemons_page.dart';
 import 'package:pokedex_app/ui/pages/pokemons_list.dart';
-import 'package:pokedex_app/ui/pages/pokemon_details_page.dart';
 import 'package:provider/provider.dart';
 
 import 'core/di/configure_providers.dart';
-import 'domain/base_stats.dart';
-import 'domain/pokemon.dart'; // Importe a classe Pokemon se ainda não o fez
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,8 +39,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(),
         '/pokedex': (context) => PokemonListPage(),
-        // Aqui você cria o Pokemon com ID 1 e passa para EncontroDiarioPage
         '/encontroDiario': (context) => EncontroDiarioPage(),
+        '/myPokemons': (context) => MyPokemonsPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),

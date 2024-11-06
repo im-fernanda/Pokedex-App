@@ -47,7 +47,7 @@ class ApiClient {
 
   Future<Pokemon> getPokemonById(int id) async {
     final response = await _dio.get(
-      "/pokemons/$id", // Usando o ID na URL
+      "/pokemons/$id",
     );
 
     if (response.statusCode != null && response.statusCode! >= 400) {
@@ -56,7 +56,7 @@ class ApiClient {
         message: response.statusMessage,
       );
     } else if (response.statusCode != null) {
-      //Mapeia a resposta como um único Pokémon
+      //Mapeia a resposta como um único objeto Pokémon
       final pokemonEntity =
           PokemonEntity.fromJson(response.data as Map<String, dynamic>);
 

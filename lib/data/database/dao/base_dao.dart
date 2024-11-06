@@ -22,7 +22,9 @@ abstract class BaseDao {
         final batch = db.batch();
         _createPokemonsTableV1(batch);
         _createCapturedPokemonsTableV1(batch);
+        _createDailyPokemonTable(batch);
         await batch.commit();
+        await db.execute('PRAGMA foreign_keys = ON;');
       },
       version: databaseVersion,
     );
@@ -57,5 +59,15 @@ abstract class BaseDao {
     );
     ''',
     );
+  }
+
+  void _createDailyPokemonTable(Batch batch) {
+    batch.execute('''
+    CREATE TABLE daily_pokemon_table (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      pokemon_id INTEGER NOT NULL,
+      data TEXT
+    )
+  ''');
   }
 }

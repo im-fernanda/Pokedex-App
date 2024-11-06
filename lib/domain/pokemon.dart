@@ -15,6 +15,13 @@ class Pokemon {
     required this.base,
   });
 
+// Propriedade ara obter a URL da imagem
+  String get imgUrl {
+    // Formata o ID com três dígitos
+    final formattedId = id.toString().padLeft(3, '0');
+    return 'https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/$formattedId.png';
+  }
+
   // Método para obter a cor base de acordo com o tipo
   Color? get baseColor => colorFromType(type: type[0]);
 

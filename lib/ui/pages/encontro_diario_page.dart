@@ -18,6 +18,7 @@ class EncontroDiarioPage extends StatefulWidget {
 class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
   late Pokemon _pokemon; // Pokémon da camada de domínio
   bool _isLoading = true; // Flag para mostrar o carregamento
+  bool _isCaptured = false; // Flag para verificar se o Pokémon foi capturado
   late CapturedPokemonDao capturedPokemonDao;
 
   @override
@@ -31,8 +32,6 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
   Future<void> _fetchPokemonOfTheDay() async {
     final pokemonDao =
         PokemonDao(/* Passar o banco de dados ou instância correta */);
-    final capturedPokemonDao =
-        CapturedPokemonDao(/* Passar o banco de dados */);
     final apiClient = ApiClient(baseUrl: 'http://192.168.0.8:3000'); // API URL
     final databaseMapper = DatabaseMapper();
     final networkMapper = NetworkMapper();
@@ -52,6 +51,10 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
       print("Pokémon do dia: ${pokemonEntity.name}");
       _pokemon = pokemonEntity;
 
+      // Verificar se o Pokémon foi capturado
+      _isCaptured = await capturedPokemonDao.isPokemonCaptured(_pokemon.id);
+
+      // Atualiza o estado após a captura ou soltura
       setState(() {
         _isLoading = false; // Desativa o carregamento
       });
@@ -78,41 +81,84 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
               children: [
                 Expanded(
                   child: PokemonDetailsPage(
-                      pokemon: _pokemon), // Exibe os detalhes do Pokémon
+                    pokemon: _pokemon,
+                  ), // Exibe os detalhes do Pokémon
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: SizedBox(
                     width: 200, // Defina a largura desejada
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Exibe a caixa de diálogo de confirmação
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.info,
-                          animType: AnimType.scale,
-                          title: 'Capturar Pokémon',
-                          desc:
-                              'Você realmente deseja pegar ${_pokemon.name}?', // Utiliza o nome do Pokémon
-                          btnCancelOnPress: () {},
-                          btnOkOnPress: () async {
-                            // Aqui você pode adicionar a lógica para pegar o Pokémon
-                            await capturedPokemonDao
-                                .capturePokemon(_pokemon.id);
+                    child: _isCaptured // Verifica se o Pokémon está capturado
+                        ? ElevatedButton(
+                            onPressed: () {
+                              // Exibe a caixa de diálogo para soltar o Pokémon
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.info,
+                                animType: AnimType.scale,
+                                title: 'Soltar Pokémon',
+                                desc:
+                                    'Você realmente deseja soltar ${_pokemon.name}?', // Utiliza o nome do Pokémon
+                                btnCancelOnPress: () {},
+                                btnOkOnPress: () async {
+                                  await capturedPokemonDao
+                                      .releasePokemon(_pokemon.id);
 
-                            final snackBar = SnackBar(
-                              content: Text('${_pokemon.name} foi pego!'),
-                              behavior: SnackBarBehavior.floating,
-                              margin:
-                                  const EdgeInsets.only(bottom: 500, left: 20),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          },
-                        ).show();
-                      },
-                      child: const Text('Capturar Pokémon'),
-                    ),
+                                  final snackBar = SnackBar(
+                                    content:
+                                        Text('${_pokemon.name} foi solto!'),
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: const EdgeInsets.only(
+                                        bottom: 500, left: 20),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+
+                                  // Atualiza o estado de captura
+                                  setState(() {
+                                    _isCaptured =
+                                        false; // Atualiza para não capturado
+                                  });
+                                },
+                              ).show();
+                            },
+                            child: const Text('Soltar Pokémon'),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              // Exibe a caixa de diálogo de captura
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.info,
+                                animType: AnimType.scale,
+                                title: 'Capturar Pokémon',
+                                desc:
+                                    'Você realmente deseja pegar ${_pokemon.name}?',
+                                btnCancelOnPress: () {},
+                                btnOkOnPress: () async {
+                                  // Lógica para pegar o Pokémon
+                                  await capturedPokemonDao
+                                      .capturePokemon(_pokemon.id);
+
+                                  final snackBar = SnackBar(
+                                    content: Text('${_pokemon.name} foi pego!'),
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: const EdgeInsets.only(
+                                        bottom: 500, left: 20),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+
+                                  // Atualiza o estado de captura
+                                  setState(() {
+                                    _isCaptured =
+                                        true; // Atualiza para capturado
+                                  });
+                                },
+                              ).show();
+                            },
+                            child: const Text('Capturar Pokémon'),
+                          ),
                   ),
                 ),
               ],

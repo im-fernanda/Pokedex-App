@@ -25,9 +25,9 @@ class PokemonCard extends StatelessWidget {
           height: 130,
           child: Card(
             elevation: 5,
-            color: pokemon.baseColor, // Cor do card baseada no tipo do Pokémon
+            color: pokemon.baseColor,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16), // Bordas arredondadas
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Stack(
               children: [
@@ -57,9 +57,7 @@ class PokemonCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-
                             const SizedBox(height: 15),
-                            // Tipos do Pokémon usando o TypeWidget
                             Wrap(
                               children: pokemon.type.map((type) {
                                 return TypeWidget(
@@ -68,7 +66,6 @@ class PokemonCard extends StatelessWidget {
                               }).toList(),
                             ),
                             const SizedBox(height: 8),
-                            // Atributos de base do Pokémon com Padding para afastar da borda esquerda
                             Padding(
                               padding: const EdgeInsets.only(left: 16),
                               child: Column(

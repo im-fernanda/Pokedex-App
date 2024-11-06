@@ -21,6 +21,7 @@ abstract class BaseDao {
       onCreate: (db, version) async {
         final batch = db.batch();
         _createPokemonsTableV1(batch);
+        _createCapturedPokemonsTableV1(batch);
         await batch.commit();
       },
       version: databaseVersion,
@@ -43,6 +44,18 @@ abstract class BaseDao {
         ${PokemonDatabaseContract.type2Column} TEXT
       );
       ''',
+    );
+  }
+
+  void _createCapturedPokemonsTableV1(Batch batch) {
+    batch.execute(
+      '''
+    CREATE TABLE captured_pokemon_table (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      pokemon_id INTEGER NOT NULL,
+      FOREIGN KEY(pokemon_id) REFERENCES pokemon_table(id)
+    );
+    ''',
     );
   }
 }

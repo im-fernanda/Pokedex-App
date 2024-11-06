@@ -1,4 +1,6 @@
+import 'package:pokedex_app/data/database/dao/captured_pokemon_dao.dart';
 import 'package:pokedex_app/data/database/dao/pokemon_dao.dart';
+import 'package:pokedex_app/data/database/dao/captured_pokemon_dao.dart';
 import 'package:pokedex_app/data/database/database_mapper.dart';
 import 'package:pokedex_app/data/network/client/api_client.dart';
 import 'package:pokedex_app/data/network/network_mapper.dart';
@@ -16,18 +18,21 @@ class ConfigureProviders {
     final network_mapper = NetworkMapper();
     final database_mapper = DatabaseMapper();
     final pokemon_dao = PokemonDao();
+    final captured_dao = CapturedPokemonDao();
 
     final pokemon_repository = PokemonRepositoryImpl(
         apiClient: api_client,
         networkMapper: network_mapper,
         databaseMapper: database_mapper,
-        pokemonDao: pokemon_dao);
+        pokemonDao: pokemon_dao,
+        capturedPokemonDao: captured_dao);
 
     return ConfigureProviders(providers: [
       Provider<ApiClient>.value(value: api_client),
       Provider<NetworkMapper>.value(value: network_mapper),
       Provider<DatabaseMapper>.value(value: database_mapper),
       Provider<PokemonDao>.value(value: pokemon_dao),
+      Provider<CapturedPokemonDao>.value(value: captured_dao),
       Provider<PokemonRepositoryImpl>.value(value: pokemon_repository),
     ]);
   }

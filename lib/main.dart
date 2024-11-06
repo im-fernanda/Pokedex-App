@@ -42,21 +42,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/pokedex': (context) => PokemonListPage(),
         // Aqui você cria o Pokemon com ID 1 e passa para EncontroDiarioPage
-        '/encontroDiario': (context) => EncontroDiarioPage(
-              pokemon: Pokemon(
-                id: 1,
-                name: 'Bulbasaur',
-                base: BaseStats(
-                    hp: 45,
-                    attack: 49,
-                    defense: 49,
-                    speed: 45,
-                    spAttack: 65,
-                    spDefense: 65),
-                type: ['Grass', 'Poison'],
-                // Exemplo de cor base
-              ),
-            ),
+        '/encontroDiario': (context) => EncontroDiarioPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),

@@ -2,30 +2,105 @@ import 'package:flutter/material.dart';
 import 'package:pokedex_app/ui/pages/widgets/stat_row_widget.dart';
 import 'package:pokedex_app/ui/utils/stat_color.dart';
 import 'package:pokedex_app/ui/pages/widgets/pokemon_type_icon.dart';
+import 'package:awesome_dialog/awesome_dialog.dart'; // Importando o pacote
 import '../../domain/pokemon.dart';
+import '../../data/database/dao/captured_pokemon_dao.dart';
 
-class PokemonDetailsPage extends StatelessWidget {
+class PokemonDetailsPage extends StatefulWidget {
   final Pokemon pokemon;
+  final Function()? onPokemonReleased; // Adicionando o callback
 
-  const PokemonDetailsPage({Key? key, required this.pokemon}) : super(key: key);
+  const PokemonDetailsPage(
+      {Key? key, required this.pokemon, this.onPokemonReleased})
+      : super(key: key);
+
+  @override
+  _PokemonDetailsPageState createState() => _PokemonDetailsPageState();
+}
+
+class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
+  late bool _isCaptured;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfCaptured();
+  }
+
+  Future<void> _checkIfCaptured() async {
+    final capturedPokemonDao = CapturedPokemonDao();
+    final isCaptured =
+        await capturedPokemonDao.isPokemonCaptured(widget.pokemon.id);
+
+    setState(() {
+      _isCaptured = isCaptured;
+    });
+  }
+
+  Future<void> _toggleCaptureStatus() async {
+    final capturedPokemonDao = CapturedPokemonDao();
+
+    if (_isCaptured) {
+      _showReleaseConfirmationDialog(capturedPokemonDao);
+    } else {
+      await capturedPokemonDao.capturePokemon(widget.pokemon.id);
+      setState(() {
+        _isCaptured = true;
+      });
+    }
+  }
+
+  void _showReleaseConfirmationDialog(CapturedPokemonDao capturedPokemonDao) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      title: 'Confirmar Ação',
+      desc: 'Você tem certeza que deseja soltar ${widget.pokemon.name}?',
+      btnCancelText: 'Cancelar',
+      btnOkText: 'Confirmar',
+      btnCancelOnPress: () {
+        Navigator.of(context).pop();
+      },
+      btnOkOnPress: () async {
+        await capturedPokemonDao.releasePokemon(widget.pokemon.id);
+        setState(() {
+          _isCaptured = false;
+        });
+
+        // Exibe o diálogo de sucesso
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          title: 'Pokémon Solto!',
+          desc: '${widget.pokemon.name} foi solto.',
+          btnOkText: 'Ok',
+          btnOkOnPress: () {
+            Navigator.of(context).pop(); // Fecha o diálogo de sucesso
+            Navigator.of(context)
+                .pop(); // Volta para a página anterior (MyPokemonsPage)
+          },
+        ).show();
+      },
+    ).show();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String formattedId = pokemon.id.toString().padLeft(3, '0');
+    String formattedId = widget.pokemon.id.toString().padLeft(3, '0');
 
-    int totalStats = pokemon.base.hp +
-        pokemon.base.attack +
-        pokemon.base.defense +
-        pokemon.base.speed +
-        pokemon.base.spAttack +
-        pokemon.base.spDefense;
+    int totalStats = widget.pokemon.base.hp +
+        widget.pokemon.base.attack +
+        widget.pokemon.base.defense +
+        widget.pokemon.base.speed +
+        widget.pokemon.base.spAttack +
+        widget.pokemon.base.spDefense;
 
     return Scaffold(
       body: Stack(
         children: [
           Container(
             height: MediaQuery.of(context).size.height * 0.28,
-            color: pokemon.baseColor,
+            color: widget.pokemon.baseColor,
           ),
           SafeArea(
             child: Padding(
@@ -42,7 +117,7 @@ class PokemonDetailsPage extends StatelessWidget {
                   ),
                   Center(
                     child: Image.network(
-                      pokemon.imgUrl,
+                      widget.pokemon.imgUrl,
                       width: 200,
                       height: 200,
                       errorBuilder: (context, error, stackTrace) =>
@@ -51,7 +126,7 @@ class PokemonDetailsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '${pokemon.name} #$formattedId',
+                    '${widget.pokemon.name} #$formattedId',
                     style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -61,8 +136,8 @@ class PokemonDetailsPage extends StatelessWidget {
                   Center(
                     child: Wrap(
                       spacing: 8,
-                      children: pokemon.type.map((type) {
-                        final color = pokemon.baseColor;
+                      children: widget.pokemon.type.map((type) {
+                        final color = widget.pokemon.baseColor;
                         return Chip(
                           avatar: Icon(
                             getTypeIcon(type),
@@ -76,8 +151,7 @@ class PokemonDetailsPage extends StatelessWidget {
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
-                            side: const BorderSide(
-                                color: Colors.transparent), // Borda removida
+                            side: const BorderSide(color: Colors.transparent),
                           ),
                         );
                       }).toList(),
@@ -97,7 +171,7 @@ class PokemonDetailsPage extends StatelessWidget {
                           "BASE STATS",
                           style:
                               Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    color: pokemon.baseColor,
+                                    color: widget.pokemon.baseColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
@@ -106,32 +180,32 @@ class PokemonDetailsPage extends StatelessWidget {
                           children: [
                             StatRowWidget(
                               statName: "HP",
-                              statValue: pokemon.base.hp,
+                              statValue: widget.pokemon.base.hp,
                               getStatColor: getStatColor,
                             ),
                             StatRowWidget(
                               statName: "Attack",
-                              statValue: pokemon.base.attack,
+                              statValue: widget.pokemon.base.attack,
                               getStatColor: getStatColor,
                             ),
                             StatRowWidget(
                               statName: "Defense",
-                              statValue: pokemon.base.defense,
+                              statValue: widget.pokemon.base.defense,
                               getStatColor: getStatColor,
                             ),
                             StatRowWidget(
                               statName: "Speed",
-                              statValue: pokemon.base.speed,
+                              statValue: widget.pokemon.base.speed,
                               getStatColor: getStatColor,
                             ),
                             StatRowWidget(
                               statName: "Special Atk",
-                              statValue: pokemon.base.spAttack,
+                              statValue: widget.pokemon.base.spAttack,
                               getStatColor: getStatColor,
                             ),
                             StatRowWidget(
                               statName: "Special Def",
-                              statValue: pokemon.base.spDefense,
+                              statValue: widget.pokemon.base.spDefense,
                               getStatColor: getStatColor,
                             ),
                             const SizedBox(height: 8),
@@ -144,6 +218,11 @@ class PokemonDetailsPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (_isCaptured)
+                    ElevatedButton(
+                      onPressed: _toggleCaptureStatus,
+                      child: const Text('Soltar Pokémon'),
+                    ),
                 ],
               ),
             ),

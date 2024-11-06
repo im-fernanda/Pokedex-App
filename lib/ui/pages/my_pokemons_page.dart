@@ -4,7 +4,6 @@ import 'package:pokedex_app/ui/pages/widgets/pokemon_card.dart';
 import '../../data/database/dao/captured_pokemon_dao.dart';
 import '../../domain/pokemon.dart';
 import 'pokemon_details_page.dart';
-import 'widgets/pokemon_card.dart'; // Importe o widget PokemonCard
 
 class MyPokemonsPage extends StatefulWidget {
   @override
@@ -64,25 +63,31 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
           : _capturedPokemons.isEmpty
               ? const Center(child: Text('Nenhum Pokémon capturado ainda.'))
               : SingleChildScrollView(
-                  // Use SingleChildScrollView para garantir que o conteúdo seja rolável
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: _capturedPokemons.map((pokemon) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 5.0),
-                          child: PokemonCard(
-                            pokemon: pokemon,
-                            onTap: () {
-                              // Navega para a página de detalhes ao tocar no card
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      PokemonDetailsPage(pokemon: pokemon),
-                                ),
-                              );
-                            },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              PokemonCard(
+                                pokemon: pokemon,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PokemonDetailsPage(
+                                        pokemon: pokemon,
+                                        onPokemonReleased:
+                                            _fetchCapturedPokemons, // Passando o callback
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         );
                       }).toList(),

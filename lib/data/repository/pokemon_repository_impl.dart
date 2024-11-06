@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:intl/intl.dart';
 import 'package:pokedex_app/data/database/dao/pokemon_dao.dart';
 import 'package:pokedex_app/data/database/database_mapper.dart';
 import 'package:pokedex_app/data/network/client/api_client.dart';
@@ -7,7 +7,6 @@ import 'package:pokedex_app/data/network/network_mapper.dart';
 import 'package:pokedex_app/data/repository/pokemon_repository.dart';
 import '../../domain/pokemon.dart';
 import '../database/dao/captured_pokemon_dao.dart';
-
 
 class PokemonRepositoryImpl implements IPokemonRepository {
   final ApiClient apiClient;
@@ -48,16 +47,28 @@ class PokemonRepositoryImpl implements IPokemonRepository {
 
   Future<Pokemon> pokemonOfTheDay() async {
     try {
+      print("Entrou em pokemonoftheday");
+      String dataAtual = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+      // Verificar se já existe um Pokémon do dia para hoje
+      final dailyPokemon = await capturedPokemonDao.getDailyPokemon();
+
+      if (dailyPokemon != null && dailyPokemon['data'] == dataAtual) {
+        // Retorna o Pokémon do dia já sorteado para dataAtual
+        print("Data do sorteio: $dataAtual");
+        return await apiClient.getPokemonById(dailyPokemon['pokemon_id']);
+      }
+
+      // Sortear um novo Pokémon se a data for diferente
       final random = Random();
       final int randomId = random.nextInt(809) + 1;
-
       print("ID sorteado: $randomId");
-
+      print("Data do sorteio: $dataAtual");
       // Busca o Pokémon com o ID sorteado na API
       final pokemonFromApi = await apiClient.getPokemonById(randomId);
 
       //Salvar no BD
-      await capturedPokemonDao.setDailyPokemon(randomId);
+      await capturedPokemonDao.setDailyPokemon(randomId, dataAtual);
 
       return pokemonFromApi; // Retorna o Pokémon sorteado
     } catch (e) {

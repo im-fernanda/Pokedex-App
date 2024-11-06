@@ -3,27 +3,39 @@ import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CapturedPokemonDao extends BaseDao {
-  Future<void> capturePokemon(int pokemonId) async {
+  // Método para verificar se o Pokémon já foi capturado
+  Future<bool> isPokemonCaptured(int pokemonId) async {
     final Database db = await getDb();
-    await db.insert(
+    final List<Map<String, dynamic>> result = await db.query(
       'captured_pokemon_table',
-      {'pokemon_id': pokemonId},
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      where: 'pokemon_id = ?',
+      whereArgs: [pokemonId],
     );
+    return result.isNotEmpty;
   }
 
-  Future<void> setDailyPokemon(int pokemonId) async {
-    final Database db = await getDb();
+  //Método para captura
+  Future<void> capturePokemon(int pokemonId) async {
+    final isCaptured = await isPokemonCaptured(pokemonId);
+    if (!isCaptured) {
+      final Database db = await getDb();
+      await db.insert(
+        'captured_pokemon_table',
+        {'pokemon_id': pokemonId},
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
 
-    // Obter a data atual no formato dd-MM-yyyy
-    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  Future<void> setDailyPokemon(int pokemonId, String date) async {
+    final Database db = await getDb();
 
     // Inserir o Pokémon do dia com a data formatada
     await db.insert(
       'daily_pokemon_table',
       {
         'pokemon_id': pokemonId,
-        'data': formattedDate,
+        'data': date,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -47,6 +59,16 @@ class CapturedPokemonDao extends BaseDao {
         List.generate(maps.length, (i) => maps[i]['pokemon_id'] as int);
     print('IDs capturados: $capturedPokemonIds');
     return capturedPokemonIds;
+  }
+
+  // Método para obter o Pokémon do dia com a data
+  Future<Map<String, dynamic>?> getDailyPokemon() async {
+    final Database db = await getDb();
+    final result = await db.query(
+      'daily_pokemon_table',
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
   }
 }
 

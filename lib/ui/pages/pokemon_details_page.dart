@@ -20,7 +20,7 @@ class PokemonDetailsPage extends StatefulWidget {
 }
 
 class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
-  late bool _isCaptured;
+  late bool _isCaptured = false;
 
   @override
   void initState() {

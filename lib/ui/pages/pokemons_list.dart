@@ -46,17 +46,29 @@ class _PokemonListPageState extends State<PokemonListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Pokédex"),
-          backgroundColor: Color(0xFFFFFFFF),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: PagedListView<int, Pokemon>(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<Pokemon>(
-              itemBuilder: (context, pokemon, index) => GestureDetector(
+      appBar: AppBar(
+        title: const Text("Pokédex"),
+        backgroundColor: Color(0xFFFFFFFF),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: PagedListView<int, Pokemon>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<Pokemon>(
+            itemBuilder: (context, pokemon, index) => GestureDetector(
+              onTap: () {
+                // Ação de navegação ao tocar no card
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PokemonDetailsPage(pokemon: pokemon),
+                  ),
+                );
+              },
+              child: PokemonCard(
+                pokemon: pokemon,
                 onTap: () {
+                  // Passa a função onTap para o PokemonCard
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -65,10 +77,11 @@ class _PokemonListPageState extends State<PokemonListPage> {
                     ),
                   );
                 },
-                child: PokemonCard(pokemon: pokemon),
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

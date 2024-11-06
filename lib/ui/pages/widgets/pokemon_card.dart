@@ -6,8 +6,9 @@ import 'type_widget.dart';
 
 class PokemonCard extends StatelessWidget {
   final Pokemon pokemon;
+  final VoidCallback onTap; // Função onTap como parâmetro
 
-  const PokemonCard({super.key, required this.pokemon});
+  const PokemonCard({super.key, required this.pokemon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -26,89 +27,87 @@ class PokemonCard extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Detalhes do Pokémon (nomes e tipos) à esquerda
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 18),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                pokemon.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                overflow: TextOverflow.ellipsis,
+            child: InkWell(
+              // Use InkWell para capturar o onTap
+              onTap: onTap, // A função onTap passada como parâmetro
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Detalhes do Pokémon (nomes e tipos) à esquerda
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 18),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  pokemon.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 15),
-                            Wrap(
-                              children: pokemon.type.map((type) {
-                                return TypeWidget(
-                                  name: type,
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 8),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              const SizedBox(height: 15),
+                              Wrap(
+                                children: pokemon.type.map((type) {
+                                  return TypeWidget(
+                                    name: type,
+                                  );
+                                }).toList(),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                          width: 16), // Espaçamento entre detalhes e imagem
-                      // Imagem do Pokémon à direita
-                      SizedBox(
-                        width: 150,
-                        height: 110,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: CachedNetworkImage(
-                            imageUrl: pokemon.imgUrl,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.black,
+                        const SizedBox(
+                            width: 16), // Espaçamento entre detalhes e imagem
+                        // Imagem do Pokémon à direita
+                        SizedBox(
+                          width: 150,
+                          height: 110,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: pokemon.imgUrl,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.image_not_supported,
+                                size: 50,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                // ID do Pokémon no canto superior direito
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Text(
-                    '#$formattedId',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  // ID do Pokémon no canto superior direito
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Text(
+                      '#$formattedId',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

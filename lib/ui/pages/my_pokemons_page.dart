@@ -3,6 +3,7 @@ import 'package:pokedex_app/data/network/client/api_client.dart';
 import 'package:pokedex_app/ui/pages/widgets/pokemon_card.dart';
 import '../../data/database/dao/captured_pokemon_dao.dart';
 import '../../domain/pokemon.dart';
+import 'pokemon_details_page.dart';
 import 'widgets/pokemon_card.dart'; // Importe o widget PokemonCard
 
 class MyPokemonsPage extends StatefulWidget {
@@ -68,8 +69,19 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
                     final pokemon = _capturedPokemons[index];
                     return Padding(
                       padding: const EdgeInsets.only(top: 5.0),
-                      child:
-                          PokemonCard(pokemon: pokemon), // Usando o PokemonCard
+                      child: PokemonCard(
+                        pokemon: pokemon,
+                        onTap: () {
+                          // Navega para a página de detalhes ao tocar no card
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PokemonDetailsPage(pokemon: pokemon),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

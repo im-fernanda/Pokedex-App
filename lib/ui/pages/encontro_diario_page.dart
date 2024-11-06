@@ -16,27 +16,27 @@ class EncontroDiarioPage extends StatefulWidget {
 }
 
 class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
-  late Pokemon _pokemon; // Pokémon da camada de domínio
-  bool _isLoading = true; // Flag para mostrar o carregamento
+  late Future<Pokemon>
+      _pokemonFuture; // Define como Future para usar no FutureBuilder
   bool _isCaptured = false; // Flag para verificar se o Pokémon foi capturado
   late CapturedPokemonDao capturedPokemonDao;
 
   @override
   void initState() {
     super.initState();
+    _isCaptured = false;
     capturedPokemonDao = CapturedPokemonDao();
-    _fetchPokemonOfTheDay();
+    _pokemonFuture = _fetchPokemonOfTheDay();
   }
 
   // Método para buscar o Pokémon do dia
-  Future<void> _fetchPokemonOfTheDay() async {
-    final pokemonDao =
-        PokemonDao(/* Passar o banco de dados ou instância correta */);
-    final apiClient = ApiClient(baseUrl: 'http://192.168.0.8:3000'); // API URL
+  Future<Pokemon> _fetchPokemonOfTheDay() async {
+    final pokemonDao = PokemonDao(/* Passe a instância correta do banco */);
+    final apiClient =
+        ApiClient(baseUrl: 'http://192.168.0.8:3000'); // URL da API
     final databaseMapper = DatabaseMapper();
     final networkMapper = NetworkMapper();
 
-    // Instanciando o repositório
     final pokemonRepository = PokemonRepositoryImpl(
       pokemonDao: pokemonDao,
       capturedPokemonDao: capturedPokemonDao,
@@ -46,23 +46,11 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
     );
 
     try {
-      // Obtendo o Pokémon do dia do repositório
-      final pokemonEntity = await pokemonRepository.pokemonOfTheDay();
-      print("Pokémon do dia: ${pokemonEntity.name}");
-      _pokemon = pokemonEntity;
-
-      // Verificar se o Pokémon foi capturado
-      _isCaptured = await capturedPokemonDao.isPokemonCaptured(_pokemon.id);
-
-      // Atualiza o estado após a captura ou soltura
-      setState(() {
-        _isLoading = false; // Desativa o carregamento
-      });
+      final pokemon = await pokemonRepository.pokemonOfTheDay();
+      _isCaptured = await capturedPokemonDao.isPokemonCaptured(pokemon.id);
+      return pokemon;
     } catch (e) {
-      setState(() {
-        _isLoading = false; // Desativa o carregamento
-      });
-      print('Erro ao buscar Pokémon do dia: ${e.toString()}');
+      throw Exception("Não foi possível obter o Pokémon do dia.");
     }
   }
 
@@ -73,40 +61,43 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
         title: const Text('Encontro Diário'),
         automaticallyImplyLeading: false,
       ),
-      body: _isLoading
-          ? const Center(
-              child:
-                  CircularProgressIndicator()) // Mostra um loading enquanto busca o Pokémon
-          : Column(
+      body: FutureBuilder<Pokemon>(
+        future: _pokemonFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Erro ao carregar Pokémon do dia'));
+          } else if (snapshot.hasData) {
+            final pokemon = snapshot.data!;
+            return Column(
               children: [
                 Expanded(
                   child: PokemonDetailsPage(
-                    pokemon: _pokemon,
+                    pokemon: pokemon,
                   ), // Exibe os detalhes do Pokémon
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: SizedBox(
-                    width: 200, // Defina a largura desejada
-                    child: _isCaptured // Verifica se o Pokémon está capturado
+                    width: 200,
+                    child: _isCaptured
                         ? ElevatedButton(
                             onPressed: () {
-                              // Exibe a caixa de diálogo para soltar o Pokémon
                               AwesomeDialog(
                                 context: context,
                                 dialogType: DialogType.info,
                                 animType: AnimType.scale,
                                 title: 'Soltar Pokémon',
                                 desc:
-                                    'Você realmente deseja soltar ${_pokemon.name}?', // Utiliza o nome do Pokémon
+                                    'Você realmente deseja soltar ${pokemon.name}?',
                                 btnCancelOnPress: () {},
                                 btnOkOnPress: () async {
                                   await capturedPokemonDao
-                                      .releasePokemon(_pokemon.id);
+                                      .releasePokemon(pokemon.id);
 
                                   final snackBar = SnackBar(
-                                    content:
-                                        Text('${_pokemon.name} foi solto!'),
+                                    content: Text('${pokemon.name} foi solto!'),
                                     behavior: SnackBarBehavior.floating,
                                     margin: const EdgeInsets.only(
                                         bottom: 500, left: 20),
@@ -114,10 +105,8 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
 
-                                  // Atualiza o estado de captura
                                   setState(() {
-                                    _isCaptured =
-                                        false; // Atualiza para não capturado
+                                    _isCaptured = false;
                                   });
                                 },
                               ).show();
@@ -129,7 +118,6 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                               bool isFull =
                                   await capturedPokemonDao.isPokedexFull();
                               if (isFull) {
-                                // Exibe mensagem de erro caso a Pokédex esteja cheia
                                 AwesomeDialog(
                                   context: context,
                                   dialogType: DialogType.error,
@@ -139,23 +127,21 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                                   btnOkOnPress: () {},
                                 ).show();
                               } else {
-                                // Exibe a caixa de diálogo de captura
                                 AwesomeDialog(
                                   context: context,
                                   dialogType: DialogType.info,
                                   animType: AnimType.scale,
                                   title: 'Capturar Pokémon',
                                   desc:
-                                      'Você realmente deseja pegar ${_pokemon.name}?',
+                                      'Você realmente deseja capturar ${pokemon.name}?',
                                   btnCancelOnPress: () {},
                                   btnOkOnPress: () async {
-                                    // Lógica para pegar o Pokémon
                                     await capturedPokemonDao
-                                        .capturePokemon(_pokemon.id);
+                                        .capturePokemon(pokemon.id);
 
                                     final snackBar = SnackBar(
-                                      content:
-                                          Text('${_pokemon.name} foi pego!'),
+                                      content: Text(
+                                          '${pokemon.name} foi capturado!'),
                                       behavior: SnackBarBehavior.floating,
                                       margin: const EdgeInsets.only(
                                           bottom: 500, left: 20),
@@ -163,10 +149,8 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
 
-                                    // Atualiza o estado de captura
                                     setState(() {
-                                      _isCaptured =
-                                          true; // Atualiza para capturado
+                                      _isCaptured = true;
                                     });
                                   },
                                 ).show();
@@ -177,7 +161,12 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                   ),
                 ),
               ],
-            ),
+            );
+          } else {
+            return Center(child: Text('Nenhum Pokémon encontrado.'));
+          }
+        },
+      ),
     );
   }
 }

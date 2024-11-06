@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/ui/pages/widgets/stat_row_widget.dart';
 import 'package:pokedex_app/ui/utils/stat_color.dart';
@@ -116,12 +117,14 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                     ),
                   ),
                   Center(
-                    child: Image.network(
-                      widget.pokemon.imgUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.pokemon.imgUrl,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                       width: 200,
                       height: 200,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.image_not_supported, size: 100),
                     ),
                   ),
                   const SizedBox(height: 16),

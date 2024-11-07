@@ -16,8 +16,7 @@ class EncontroDiarioPage extends StatefulWidget {
 }
 
 class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
-  late Future<Pokemon>
-      _pokemonFuture; // Define como Future para usar no FutureBuilder
+  late Future<Pokemon> _pokemonFuture;
   bool _isCaptured = false; // Flag para verificar se o Pokémon foi capturado
   late CapturedPokemonDao capturedPokemonDao;
 
@@ -31,9 +30,8 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
 
   // Método para buscar o Pokémon do dia
   Future<Pokemon> _fetchPokemonOfTheDay() async {
-    final pokemonDao = PokemonDao(/* Passe a instância correta do banco */);
-    final apiClient =
-        ApiClient(baseUrl: 'http://192.168.0.8:3000'); // URL da API
+    final pokemonDao = PokemonDao();
+    final apiClient = ApiClient(baseUrl: 'http://192.168.0.8:3000');
     final databaseMapper = DatabaseMapper();
     final networkMapper = NetworkMapper();
 
@@ -77,89 +75,15 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                     pokemon: pokemon,
                   ), // Exibe os detalhes do Pokémon
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: SizedBox(
-                    width: 200,
-                    child: _isCaptured
-                        ? ElevatedButton(
-                            onPressed: () {
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.info,
-                                animType: AnimType.scale,
-                                title: 'Soltar Pokémon',
-                                desc:
-                                    'Você realmente deseja soltar ${pokemon.name}?',
-                                btnCancelOnPress: () {},
-                                btnOkOnPress: () async {
-                                  await capturedPokemonDao
-                                      .releasePokemon(pokemon.id);
-
-                                  final snackBar = SnackBar(
-                                    content: Text('${pokemon.name} foi solto!'),
-                                    behavior: SnackBarBehavior.floating,
-                                    margin: const EdgeInsets.only(
-                                        bottom: 500, left: 20),
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-
-                                  setState(() {
-                                    _isCaptured = false;
-                                  });
-                                },
-                              ).show();
-                            },
-                            child: const Text('Soltar Pokémon'),
-                          )
-                        : ElevatedButton(
-                            onPressed: () async {
-                              bool isFull =
-                                  await capturedPokemonDao.isPokedexFull();
-                              if (isFull) {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.scale,
-                                  title: 'Pokédex Cheia',
-                                  desc: 'Não é possível capturar mais pokémon.',
-                                  btnOkOnPress: () {},
-                                ).show();
-                              } else {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.info,
-                                  animType: AnimType.scale,
-                                  title: 'Capturar Pokémon',
-                                  desc:
-                                      'Você realmente deseja capturar ${pokemon.name}?',
-                                  btnCancelOnPress: () {},
-                                  btnOkOnPress: () async {
-                                    await capturedPokemonDao
-                                        .capturePokemon(pokemon.id);
-
-                                    final snackBar = SnackBar(
-                                      content: Text(
-                                          '${pokemon.name} foi capturado!'),
-                                      behavior: SnackBarBehavior.floating,
-                                      margin: const EdgeInsets.only(
-                                          bottom: 500, left: 20),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-
-                                    setState(() {
-                                      _isCaptured = true;
-                                    });
-                                  },
-                                ).show();
-                              }
-                            },
-                            child: const Text('Capturar Pokémon'),
-                          ),
+                // Botão de Captura apenas se o Pokémon não foi capturado
+                if (!_isCaptured)
+                  Padding(
+                    padding: const EdgeInsets.all(9.0),
+                    child: ElevatedButton(
+                      onPressed: () => _capturePokemon(context, pokemon),
+                      child: const Text('Capturar Pokémon'),
+                    ),
                   ),
-                ),
               ],
             );
           } else {
@@ -168,5 +92,44 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
         },
       ),
     );
+  }
+
+  void _capturePokemon(BuildContext context, Pokemon pokemon) async {
+    bool isFull = await capturedPokemonDao.isPokedexFull();
+    if (isFull) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        animType: AnimType.scale,
+        title: 'Pokédex Cheia',
+        desc: 'Não é possível capturar mais pokémon.',
+        btnOkOnPress: () {},
+      ).show();
+    } else {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.info,
+        animType: AnimType.scale,
+        title: 'Capturar Pokémon',
+        desc: 'Você realmente deseja capturar ${pokemon.name}?',
+        btnCancelOnPress: () {},
+        btnOkOnPress: () async {
+          await capturedPokemonDao.capturePokemon(pokemon.id);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${pokemon.name} foi capturado!'),
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.only(bottom: 500, left: 20),
+            ),
+          );
+
+          setState(() {
+            _isCaptured =
+                true; // Atualiza o estado para indicar que o Pokémon foi capturado
+          });
+        },
+      ).show();
+    }
   }
 }

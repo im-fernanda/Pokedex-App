@@ -1,4 +1,3 @@
-// stat_rows_widget.dart
 import 'package:flutter/material.dart';
 
 class StatRowWidget extends StatelessWidget {

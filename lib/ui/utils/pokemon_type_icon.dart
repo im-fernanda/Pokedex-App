@@ -1,4 +1,3 @@
-// lib/ui/widgets/pokemon_type_icon.dart
 import 'package:flutter/material.dart';
 
 IconData getTypeIcon(String type) {

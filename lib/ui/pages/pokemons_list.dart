@@ -57,7 +57,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
           builderDelegate: PagedChildBuilderDelegate<Pokemon>(
             itemBuilder: (context, pokemon, index) => GestureDetector(
               onTap: () {
-                // Ação de navegação ao tocar no card
+                // Ação de navegação
                 Navigator.push(
                   context,
                   MaterialPageRoute(

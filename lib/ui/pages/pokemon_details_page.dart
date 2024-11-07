@@ -2,14 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/ui/pages/widgets/stat_row_widget.dart';
 import 'package:pokedex_app/ui/utils/stat_color.dart';
-import 'package:pokedex_app/ui/pages/widgets/pokemon_type_icon.dart';
-import 'package:awesome_dialog/awesome_dialog.dart'; // Importando o pacote
+import 'package:pokedex_app/ui/utils/pokemon_type_icon.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import '../../domain/pokemon.dart';
 import '../../data/database/dao/captured_pokemon_dao.dart';
 
 class PokemonDetailsPage extends StatefulWidget {
   final Pokemon pokemon;
-  final Function()? onPokemonReleased; // Adicionando o callback
+  final Function()? onPokemonReleased;
 
   const PokemonDetailsPage(
       {super.key, required this.pokemon, this.onPokemonReleased});
@@ -54,32 +54,26 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.info,
-      title: 'Confirmar Ação',
-      desc: 'Você tem certeza que deseja soltar ${widget.pokemon.name}?',
-      btnCancelText: 'Cancelar',
-      btnOkText: 'Confirmar',
-      btnCancelOnPress: () {
-        Navigator.of(context).pop();
-      },
+      animType: AnimType.scale,
+      title: 'Soltar Pokémon',
+      desc: 'Você realmente deseja soltar ${widget.pokemon.name}?',
+      btnCancelOnPress: () {},
       btnOkOnPress: () async {
         await capturedPokemonDao.releasePokemon(widget.pokemon.id);
+
+        // Exibe um SnackBar notificando o sucesso
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${widget.pokemon.name} foi solto!'),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 500, left: 20),
+          ),
+        );
+
+        // Atualiza o estado para refletir que o Pokémon foi solto
         setState(() {
           _isCaptured = false;
         });
-
-        // Exibe o diálogo de sucesso
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          title: 'Pokémon Solto!',
-          desc: '${widget.pokemon.name} foi solto.',
-          btnOkText: 'Ok',
-          btnOkOnPress: () {
-            Navigator.of(context).pop(); // Fecha o diálogo de sucesso
-            Navigator.of(context)
-                .pop(); // Volta para a página anterior (MyPokemonsPage)
-          },
-        ).show();
       },
     ).show();
   }

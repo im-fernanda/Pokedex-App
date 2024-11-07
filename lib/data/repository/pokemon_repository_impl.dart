@@ -7,6 +7,7 @@ import 'package:pokedex_app/data/network/network_mapper.dart';
 import 'package:pokedex_app/data/repository/interface_pokemon_repository.dart';
 import '../../domain/pokemon.dart';
 import '../database/dao/captured_pokemon_dao.dart';
+import '../database/entity/pokemon_database_entity.dart';
 
 class PokemonRepositoryImpl implements IPokemonRepository {
   final ApiClient apiClient;
@@ -46,36 +47,51 @@ class PokemonRepositoryImpl implements IPokemonRepository {
     return pokemons;
   }
 
-  // Pega o Pokémon do dia
-  @override
   Future<Pokemon> pokemonOfTheDay() async {
     try {
       print("Entrou em pokemonoftheday");
       String dataAtual = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
-      // Verifica se já existe um Pokémon do dia para hoje
+      // Verifica se já existe um Porkémon do dia para hoje
       final dailyPokemon = await capturedPokemonDao.getDailyPokemon();
 
-      //Se já tiver sido sorteado, retorna o mesmo
-      if (dailyPokemon != null && dailyPokemon['data'] == dataAtual) {
-        print("Data do sorteio: $dataAtual");
-        return await apiClient.getPokemonById(dailyPokemon['pokemon_id']);
+      // Verifica se o retorno não é nulo e contém dados válidos
+      if (dailyPokemon != null) {
+        print("Daily Pokemon encontrado no banco");
+        print("Dados: {$dailyPokemon}");
+        // Verifica se a data corresponde à data atual
+        if (dailyPokemon[DailyPokemonDbContract.dateColumn] == dataAtual) {
+          print("Recuperando do banco...");
+          // Mapeia o mapa retornado para o objeto Pokemon
+          final pokemon = databaseMapper.mapToPokemon(dailyPokemon);
+          print("Mapeado: ${pokemon}");
+
+          return pokemon;
+        } else {
+          print(
+              "Data no banco não corresponde a hoje. Sortear um novo Pokémon.");
+        }
+      } else {
+        print("Nenhum Pokémon do dia encontrado no banco.");
       }
 
-      // Sorteia um novo Pokémon se a data for diferente
+      // Caso contrário, sorteia um novo Pokémon e o salva
       final random = Random();
       final int randomId = random.nextInt(809) + 1;
       print("ID sorteado: $randomId");
       print("Data do sorteio: $dataAtual");
 
-      // Busca o Pokémon com o ID sorteado na API
+      print("Buscando na API...");
       final pokemonFromApi = await apiClient.getPokemonById(randomId);
 
-      //Salvar no BD
-      await capturedPokemonDao.setDailyPokemon(randomId, dataAtual);
+      // Salva o novo Pokémon do dia no banco
+      await capturedPokemonDao.setDailyPokemon(pokemonFromApi, dataAtual);
 
+      // Retorna o Pokémon sorteado
       return pokemonFromApi;
     } catch (e) {
+      print(
+          "Erro ao buscar Pokémon do dia: ${e.toString()}"); // Log de erro detalhado
       throw Exception("Erro ao buscar Pokémon do dia: ${e.toString()}");
     }
   }

@@ -1,6 +1,10 @@
 import 'package:pokedex_app/data/database/dao/base_dao.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../../domain/pokemon.dart';
+import '../database_mapper.dart';
+import '../entity/pokemon_database_entity.dart';
+
 class CapturedPokemonDao extends BaseDao {
   // Método para verificar a partir do id se o Pokémon foi capturado
   Future<bool> isPokemonCaptured(int pokemonId) async {
@@ -33,15 +37,25 @@ class CapturedPokemonDao extends BaseDao {
   }
 
   // Seta o pokemon do dia
-  Future<void> setDailyPokemon(int pokemonId, String date) async {
+  Future<void> setDailyPokemon(Pokemon pokemon, String date) async {
     final Database db = await getDb();
 
-    // Insere o Pokémon do dia com a data formatada
     await db.insert(
-      'daily_pokemon_table',
+      DailyPokemonDbContract.tableName,
       {
-        'pokemon_id': pokemonId,
-        'data': date,
+        DailyPokemonDbContract.pokemonIdColumn: pokemon.id,
+        DailyPokemonDbContract.nameColumn: pokemon.name,
+        DailyPokemonDbContract.hpColumn: pokemon.base.hp,
+        DailyPokemonDbContract.attackColumn: pokemon.base.attack,
+        DailyPokemonDbContract.defenseColumn: pokemon.base.defense,
+        DailyPokemonDbContract.spAttackColumn: pokemon.base.spAttack,
+        DailyPokemonDbContract.spDefenseColumn: pokemon.base.spDefense,
+        DailyPokemonDbContract.speedColumn: pokemon.base.speed,
+        DailyPokemonDbContract.type1Column: pokemon.type[0],
+        DailyPokemonDbContract.type2Column: pokemon.type.length > 1
+            ? pokemon.type[1]
+            : null, // Verificando se existe um segundo tipo
+        DailyPokemonDbContract.dateColumn: date,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

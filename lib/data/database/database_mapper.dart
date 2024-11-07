@@ -64,4 +64,39 @@ class DatabaseMapper {
       List<Pokemon> pokemons) {
     return pokemons.map(toPokemonDatabaseEntity).toList();
   }
+
+  // Função para mapear o mapa para o objeto Pokemon
+  Pokemon mapToPokemon(Map<String, dynamic> data) {
+    try {
+      // Acesso aos dados do Pokémon do banco
+      final id = data['pokemon_id'] as int;
+      final name = data['name'] as String;
+      final type1 = data['type1'] as String;
+      final type2 = data['type2'] as String?;
+
+      // A lista de tipos pode ser construída a partir de type1 e type2
+      final type = type2 != null ? [type1, type2] : [type1];
+
+      // Mapeamento das estatísticas base
+      final baseStats = BaseStats(
+        hp: data['hp'] as int,
+        attack: data['attack'] as int,
+        defense: data['defense'] as int,
+        spAttack: data['sp_attack'] as int,
+        spDefense: data['sp_defense'] as int,
+        speed: data['speed'] as int,
+      );
+
+      // Criação do objeto Pokémon
+      return Pokemon(
+        id: id,
+        name: name,
+        type: type,
+        base: baseStats,
+      );
+    } catch (e) {
+      print("Erro ao mapear Pokémon: ${e.toString()}");
+      rethrow; // Lança a exceção novamente
+    }
+  }
 }

@@ -62,3 +62,18 @@ abstract class PokemonDatabaseContract {
   static const String spDefenseColumn = "sp_defense";
   static const String speedColumn = "speed";
 }
+
+abstract class DailyPokemonDbContract {
+  static const String tableName = "daily_pokemon_table";
+  static const String pokemonIdColumn = "pokemon_id";
+  static const String nameColumn = "name";
+  static const String type1Column = "type1";
+  static const String type2Column = "type2";
+  static const String hpColumn = "hp";
+  static const String attackColumn = "attack";
+  static const String defenseColumn = "defense";
+  static const String spAttackColumn = "sp_attack";
+  static const String spDefenseColumn = "sp_defense";
+  static const String speedColumn = "speed";
+  static const String dateColumn = "data";
+}

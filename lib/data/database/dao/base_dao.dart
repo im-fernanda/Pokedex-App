@@ -68,8 +68,17 @@ abstract class BaseDao {
     CREATE TABLE daily_pokemon_table (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       pokemon_id INTEGER NOT NULL,
+      name TEXT NOT NULL,
+      hp INTEGER,
+      attack INTEGER,
+      defense INTEGER,
+      sp_attack INTEGER,
+      sp_defense INTEGER,
+      speed INTEGER,
+      type1 TEXT,
+      type2 TEXT,
       data TEXT
-    )
+    );
   ''');
   }
 }

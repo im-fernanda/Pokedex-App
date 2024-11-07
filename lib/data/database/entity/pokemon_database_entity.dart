@@ -41,9 +41,11 @@ class PokemonDatabaseEntity {
     required this.speed,
   });
 
+  // Converte um maap em um PokemonDataBaseEntity
   factory PokemonDatabaseEntity.fromJson(Map<String, dynamic> json) =>
       _$PokemonDatabaseEntityFromJson(json);
 
+  //Converte PokemonDatabaseEntity em um mapa
   Map<String, dynamic> toJson() => _$PokemonDatabaseEntityToJson(this);
 }
 

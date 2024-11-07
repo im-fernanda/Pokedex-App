@@ -48,7 +48,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pokédex"),
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFFFFFFFF),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 20.0),

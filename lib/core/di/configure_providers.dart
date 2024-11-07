@@ -8,10 +8,12 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 class ConfigureProviders {
+  //Armazena os provedores que serão injetados
   final List<SingleChildWidget> providers;
 
   ConfigureProviders({required this.providers});
 
+  //Responsável por criar a árvore de dependências.
   static Future<ConfigureProviders> createDependencyTree() async {
     final api_client = ApiClient(baseUrl: "http://192.168.0.8:3000");
     final network_mapper = NetworkMapper();
@@ -26,6 +28,7 @@ class ConfigureProviders {
         pokemonDao: pokemon_dao,
         capturedPokemonDao: captured_dao);
 
+    // Retorna os provedores configurados com os objetos criados anteriormente
     return ConfigureProviders(providers: [
       Provider<ApiClient>.value(value: api_client),
       Provider<NetworkMapper>.value(value: network_mapper),

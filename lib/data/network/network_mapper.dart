@@ -4,10 +4,9 @@ import 'package:pokedex_app/domain/base_stats.dart';
 import 'package:pokedex_app/data/network/entity/http_paged_result.dart';
 
 class NetworkMapper {
-  // Converte uma entidade da rede (obtida da API) em um objeto Pokemon
+  // Converte uma entidade da rede em um objeto Pokemon
   Pokemon toPokemon(PokemonEntity entity) {
     try {
-      // Cria uma instância de BaseStats com valores padrão, caso algum atributo seja nulo
       final baseStats = BaseStats(
           hp: entity.base.hp,
           attack: entity.base.attack,
@@ -16,12 +15,10 @@ class NetworkMapper {
           spDefense: entity.base.spDefense,
           speed: entity.base.speed);
 
-      // Retorna uma instância de Pokemon com base nos dados da entidade e no BaseStats
       return Pokemon(
         id: int.parse(entity.id),
         name: entity.name.english,
-        type: entity.type ??
-            [], // Garante que type seja uma lista vazia se for nulo
+        type: entity.type ?? [],
         base: baseStats,
       );
     } catch (e) {
@@ -29,7 +26,7 @@ class NetworkMapper {
     }
   }
 
-  // Converte uma lista de entidades da rede (obtidas da API) em uma lista de Pokemon
+  // Converte uma lista de entidades da API em uma lista de Pokemon
   List<Pokemon> toPokemons(List<PokemonEntity> entities) {
     return entities.map(toPokemon).toList();
   }

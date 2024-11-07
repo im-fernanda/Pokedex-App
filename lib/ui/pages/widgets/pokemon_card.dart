@@ -12,7 +12,6 @@ class PokemonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Formata o ID do Pokémon para três dígitos
     String formattedId = pokemon.id.toString().padLeft(3, '0');
 
     return Padding(

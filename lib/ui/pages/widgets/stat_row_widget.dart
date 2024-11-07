@@ -7,11 +7,11 @@ class StatRowWidget extends StatelessWidget {
   final Color Function(int) getStatColor;
 
   const StatRowWidget({
-    Key? key,
+    super.key,
     required this.statName,
     required this.statValue,
     required this.getStatColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +53,10 @@ class TotalStatRowWidget extends StatelessWidget {
   final int totalValue;
 
   const TotalStatRowWidget({
-    Key? key,
+    super.key,
     required this.statName,
     required this.totalValue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

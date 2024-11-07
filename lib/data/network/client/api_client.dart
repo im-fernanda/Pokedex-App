@@ -12,7 +12,6 @@ class ApiClient {
   ApiClient({required String baseUrl}) {
     _dio = Dio()
       ..options.baseUrl = baseUrl
-      //..options.headers
       ..interceptors.add(
         LogInterceptor(
           requestBody: true,
@@ -41,7 +40,7 @@ class ApiClient {
 
       return receivedData.data; // Retorna diretamente a lista de PokemonEntity
     } else {
-      throw Exception('Unknown error');
+      throw Exception('Unknown error ');
     }
   }
 

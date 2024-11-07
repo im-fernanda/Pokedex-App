@@ -1,9 +1,8 @@
 import 'package:pokedex_app/data/database/dao/base_dao.dart';
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CapturedPokemonDao extends BaseDao {
-  // Método para verificar se o Pokémon já foi capturado
+  // Método para verificar a partir do id se o Pokémon foi capturado
   Future<bool> isPokemonCaptured(int pokemonId) async {
     final Database db = await getDb();
     final List<Map<String, dynamic>> result = await db.query(
@@ -17,10 +16,10 @@ class CapturedPokemonDao extends BaseDao {
   // Verificar se a Pokédex está cheia
   Future<bool> isPokedexFull() async {
     final capturedPokemons = await getCapturedPokemonIds();
-    return capturedPokemons.length >= 6;
+    return capturedPokemons.length == 6;
   }
 
-  //Método para captura
+  // Método para captura
   Future<void> capturePokemon(int pokemonId) async {
     final isCaptured = await isPokemonCaptured(pokemonId);
     if (!isCaptured) {
@@ -33,10 +32,11 @@ class CapturedPokemonDao extends BaseDao {
     }
   }
 
+  // Seta o pokemon do dia
   Future<void> setDailyPokemon(int pokemonId, String date) async {
     final Database db = await getDb();
 
-    // Inserir o Pokémon do dia com a data formatada
+    // Insere o Pokémon do dia com a data formatada
     await db.insert(
       'daily_pokemon_table',
       {
@@ -47,6 +47,7 @@ class CapturedPokemonDao extends BaseDao {
     );
   }
 
+  // Libera pokémon da pokedex
   Future<void> releasePokemon(int pokemonId) async {
     final Database db = await getDb();
     await db.delete(
@@ -56,6 +57,8 @@ class CapturedPokemonDao extends BaseDao {
     );
   }
 
+  // Obtém todos os IDs dos pokémons capturados
+  // Mapeia os resultados para uma lista de IDs.
   Future<List<int>> getCapturedPokemonIds() async {
     final Database db = await getDb();
     final List<Map<String, dynamic>> maps =

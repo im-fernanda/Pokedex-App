@@ -20,11 +20,13 @@ abstract class BaseDao {
       join(await getDatabasesPath(), _databaseName),
       onCreate: (db, version) async {
         final batch = db.batch();
-        _createPokemonsTableV1(batch);
-        _createCapturedPokemonsTableV1(batch);
-        _createDailyPokemonTable(batch);
+        _createPokemonsTableV1(batch); // Cria a tabela de pokémons
+        _createCapturedPokemonsTableV1(
+            batch); // Cria a tabela de pokémons capturados
+        _createDailyPokemonTable(batch); // Cria a tabela de pokémons sorteados
         await batch.commit();
-        await db.execute('PRAGMA foreign_keys = ON;');
+        await db.execute(
+            'PRAGMA foreign_keys = ON;'); // Ativa as chaves estrangeiras
       },
       version: databaseVersion,
     );

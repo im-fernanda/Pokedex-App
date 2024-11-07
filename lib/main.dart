@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Fernanda's Pokedex",
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),

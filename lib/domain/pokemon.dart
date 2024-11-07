@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'base_stats.dart';
 
 class Pokemon {
-  final int id; // ID do Pokémon
-  final String name; // Nome do Pokémon
-  final List<String> type; // Tipos do Pokémon
-  final BaseStats base; // Estatísticas base
+  final int id;
+  final String name;
+  final List<String> type;
+  final BaseStats base;
 
-  // Construtor da classe
   Pokemon({
     required this.id,
     required this.name,
@@ -15,7 +14,7 @@ class Pokemon {
     required this.base,
   });
 
-// Propriedade ara obter a URL da imagem
+// Propriedade para obter a URL da imagem
   String get imgUrl {
     // Formata o ID com três dígitos
     final formattedId = id.toString().padLeft(3, '0');
@@ -25,7 +24,7 @@ class Pokemon {
   // Método para obter a cor base de acordo com o tipo
   Color? get baseColor => colorFromType(type: type[0]);
 
-  // Método estático para determinar a cor com base no tipo
+  // Método para determinar a cor com base no tipo
   static Color? colorFromType({required String type}) {
     switch (type) {
       case 'Normal':
@@ -65,7 +64,7 @@ class Pokemon {
       case 'Fairy':
         return const Color(0xFFD685AD);
       default:
-        return Colors.grey; // Cor padrão
+        return Colors.grey;
     }
   }
 }

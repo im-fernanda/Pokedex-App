@@ -43,7 +43,7 @@ class PokemonEntity {
   factory PokemonEntity.fromJson(Map<String, dynamic> json) =>
       _$PokemonEntityFromJson(json);
 
-  //Map<String, dynamic> toJson() => _$PokemonEntityToJson(this);
+  Map<String, dynamic> toJson() => _$PokemonEntityToJson(this);
 }
 
 @JsonSerializable()

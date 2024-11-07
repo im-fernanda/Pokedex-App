@@ -12,8 +12,7 @@ class PokemonDetailsPage extends StatefulWidget {
   final Function()? onPokemonReleased; // Adicionando o callback
 
   const PokemonDetailsPage(
-      {Key? key, required this.pokemon, this.onPokemonReleased})
-      : super(key: key);
+      {super.key, required this.pokemon, this.onPokemonReleased});
 
   @override
   _PokemonDetailsPageState createState() => _PokemonDetailsPageState();

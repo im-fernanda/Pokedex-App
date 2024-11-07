@@ -67,7 +67,7 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Erro ao carregar Pokémon do dia'));
+            return const Center(child: Text('Erro ao carregar Pokémon do dia'));
           } else if (snapshot.hasData) {
             final pokemon = snapshot.data!;
             return Column(
@@ -122,8 +122,8 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                                   context: context,
                                   dialogType: DialogType.error,
                                   animType: AnimType.scale,
-                                  title: 'Pokédex Lotada',
-                                  desc: 'Não é possível capturar mais Pokémon.',
+                                  title: 'Pokédex Cheia',
+                                  desc: 'Não é possível capturar mais pokémon.',
                                   btnOkOnPress: () {},
                                 ).show();
                               } else {
@@ -163,7 +163,7 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
               ],
             );
           } else {
-            return Center(child: Text('Nenhum Pokémon encontrado.'));
+            return const Center(child: Text('Nenhum Pokémon encontrado.'));
           }
         },
       ),

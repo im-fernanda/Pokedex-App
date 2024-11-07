@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:pokedex_app/ui/pages/pokemon_details_page.dart';
 
 import '../../data/database/dao/captured_pokemon_dao.dart';
-import '../../data/database/dao/pokemon_dao.dart';
-import '../../data/database/database_mapper.dart';
-import '../../data/network/client/api_client.dart';
 import '../../data/repository/pokemon_repository_impl.dart';
 import '../../domain/pokemon.dart';
-import '../../data/network/network_mapper.dart';
 
 class EncontroDiarioPage extends StatefulWidget {
   @override
@@ -17,31 +14,20 @@ class EncontroDiarioPage extends StatefulWidget {
 
 class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
   late Future<Pokemon> _pokemonFuture;
-  bool _isCaptured = false; // Flag para verificar se o Pokémon foi capturado
-  late CapturedPokemonDao capturedPokemonDao;
+  bool _isCaptured = false;
 
   @override
   void initState() {
     super.initState();
     _isCaptured = false;
-    capturedPokemonDao = CapturedPokemonDao();
     _pokemonFuture = _fetchPokemonOfTheDay();
   }
 
   // Método para buscar o Pokémon do dia
   Future<Pokemon> _fetchPokemonOfTheDay() async {
-    final pokemonDao = PokemonDao();
-    final apiClient = ApiClient(baseUrl: 'http://192.168.0.8:3000');
-    final databaseMapper = DatabaseMapper();
-    final networkMapper = NetworkMapper();
-
-    final pokemonRepository = PokemonRepositoryImpl(
-      pokemonDao: pokemonDao,
-      capturedPokemonDao: capturedPokemonDao,
-      databaseMapper: databaseMapper,
-      apiClient: apiClient,
-      networkMapper: networkMapper,
-    );
+    // Obtendo o PokemonRepository e o CapturedPokemonDao dos providers
+    final pokemonRepository = context.read<PokemonRepositoryImpl>();
+    final capturedPokemonDao = context.read<CapturedPokemonDao>();
 
     try {
       final pokemon = await pokemonRepository.pokemonOfTheDay();
@@ -73,9 +59,8 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
                 Expanded(
                   child: PokemonDetailsPage(
                     pokemon: pokemon,
-                  ), // Exibe os detalhes do Pokémon
+                  ),
                 ),
-                // Botão de Captura apenas se o Pokémon não foi capturado
                 if (!_isCaptured)
                   Padding(
                     padding: const EdgeInsets.all(9.0),
@@ -95,6 +80,8 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
   }
 
   void _capturePokemon(BuildContext context, Pokemon pokemon) async {
+    final capturedPokemonDao = context.read<CapturedPokemonDao>();
+
     bool isFull = await capturedPokemonDao.isPokedexFull();
     if (isFull) {
       AwesomeDialog(
@@ -125,8 +112,7 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
           );
 
           setState(() {
-            _isCaptured =
-                true; // Atualiza o estado para indicar que o Pokémon foi capturado
+            _isCaptured = true;
           });
         },
       ).show();

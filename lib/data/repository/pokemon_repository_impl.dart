@@ -108,21 +108,24 @@ class PokemonRepositoryImpl implements IPokemonRepository {
 
   // Método para obter todos os Pokémons capturados
   Future<List<Pokemon>> getCapturedPokemons() async {
-    // Pega todos os ids dos capturados
-    final capturedIds = await capturedPokemonDao.getCapturedPokemonIds();
+    try {
+      // Pega todos os ids dos capturados
+      final capturedIds = await capturedPokemonDao.getCapturedPokemonIds();
+      // Seleciona todos os Pokémons do banco
+      final pokemonEntities = await pokemonDao.selectAll();
+      // Cria uma instância do mapper para converter as entidades
+      final databaseMapper = DatabaseMapper();
 
-    // Seleciona todos os Pokémons do banco
-    final pokemonEntities = await pokemonDao.selectAll();
+      // Filtra os Pokémons capturados no formato do banco e mapeia para objetos Pokemon
+      final capturedPokemons = pokemonEntities
+          .where((entity) => capturedIds.contains(entity.id))
+          .map((entity) => databaseMapper.toPokemon(entity))
+          .toList();
 
-    // Cria uma instância do mapper para converter as entidades
-    final databaseMapper = DatabaseMapper();
-
-    // Filtra os Pokémons capturados no formato do banco e mapeia para objetos Pokemon
-    final capturedPokemons = pokemonEntities
-        .where((entity) => capturedIds.contains(entity.id))
-        .map((entity) => databaseMapper.toPokemon(entity))
-        .toList();
-
-    return capturedPokemons;
+      return capturedPokemons;
+    } catch (e) {
+      print('Erro ao buscar Pokémon capturados: $e');
+      throw Exception('Falha ao buscar Pokémon capturados');
+    }
   }
 }

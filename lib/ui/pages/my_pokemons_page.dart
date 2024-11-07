@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/data/network/client/api_client.dart';
+import 'package:pokedex_app/data/repository/interface_pokemon_repository.dart'; // Importando a interface
+import 'package:provider/provider.dart'; // Importando o Provider
 import 'package:pokedex_app/ui/pages/widgets/pokemon_card.dart';
-import '../../data/database/dao/captured_pokemon_dao.dart';
 import '../../domain/pokemon.dart';
 import 'pokemon_details_page.dart';
 
@@ -22,21 +23,12 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
 
   // Método para buscar os Pokémon capturados
   Future<void> _fetchCapturedPokemons() async {
-    final capturedPokemonDao = CapturedPokemonDao();
-    final apiClient = ApiClient(baseUrl: 'http://192.168.0.8:3000');
+    final pokemonRepository =
+        Provider.of<IPokemonRepository>(context, listen: false);
 
     try {
-      // Obtém os IDs dos Pokémon capturados
-      final capturedPokemonIds =
-          await capturedPokemonDao.getCapturedPokemonIds();
-
-      List<Pokemon> capturedPokemons = [];
-
-      // Para cada ID capturado, obtém os detalhes do Pokémon
-      for (var id in capturedPokemonIds) {
-        final pokemon = await apiClient.getPokemonById(id);
-        capturedPokemons.add(pokemon);
-      }
+      // Obtém os Pokémons capturados
+      final capturedPokemons = await pokemonRepository.getCapturedPokemons();
 
       // Atualiza o estado com a lista de Pokémon capturados
       setState(() {
@@ -44,7 +36,6 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
         _isLoading = false;
       });
     } catch (e) {
-      // Em caso de erro, desativa o carregamento e exibe o erro no console
       print('Erro ao buscar Pokémon capturados: $e');
       setState(() {
         _isLoading = false;
@@ -81,7 +72,7 @@ class _MyPokemonsPageState extends State<MyPokemonsPage> {
                                       builder: (context) => PokemonDetailsPage(
                                         pokemon: pokemon,
                                         onPokemonReleased:
-                                            _fetchCapturedPokemons, // Passando o callback
+                                            _fetchCapturedPokemons,
                                       ),
                                     ),
                                   );

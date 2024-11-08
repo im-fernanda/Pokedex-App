@@ -50,7 +50,7 @@ class PokemonRepositoryImpl implements IPokemonRepository {
   Future<Pokemon> pokemonOfTheDay() async {
     try {
       print("Entrou em pokemonoftheday");
-      String dataAtual = "07-11-2024";
+      String dataAtual = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
       // Verifica se já existe um Porkémon do dia para hoje
       final dailyPokemon = await capturedPokemonDao.getDailyPokemon();

@@ -3,6 +3,8 @@ import 'package:pokedex_app/data/database/entity/pokemon_database_entity.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'captured_pokemon_dao.dart';
+
 abstract class BaseDao {
   static const databaseVersion = 1;
   static const _databaseName = 'pokemon_database.db';
@@ -52,33 +54,40 @@ abstract class BaseDao {
   }
 
   void _createCapturedPokemonsTableV1(Batch batch) {
-    batch.execute(
-      '''
-    CREATE TABLE captured_pokemon_table (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      pokemon_id INTEGER NOT NULL,
-      FOREIGN KEY(pokemon_id) REFERENCES pokemon_table(id)
+    batch.execute('''
+    CREATE TABLE ${CapturedPokemonDbContract.capturedPokemonTable} (
+      ${CapturedPokemonDbContract.idColumn} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${CapturedPokemonDbContract.pokemonIdColumn} INTEGER NOT NULL,
+      ${CapturedPokemonDbContract.nameColumn} TEXT NOT NULL,
+      ${CapturedPokemonDbContract.hpColumn} INTEGER,
+      ${CapturedPokemonDbContract.attackColumn} INTEGER,
+      ${CapturedPokemonDbContract.defenseColumn} INTEGER,
+      ${CapturedPokemonDbContract.spAttackColumn} INTEGER,
+      ${CapturedPokemonDbContract.spDefenseColumn} INTEGER,
+      ${CapturedPokemonDbContract.speedColumn} INTEGER,
+      ${CapturedPokemonDbContract.type1Column} TEXT,
+      ${CapturedPokemonDbContract.type2Column} TEXT,
+      FOREIGN KEY(${CapturedPokemonDbContract.pokemonIdColumn}) REFERENCES ${PokemonDatabaseContract.pokemonTable}(${PokemonDatabaseContract.idColumn})
     );
-    ''',
-    );
+    ''');
   }
 
   void _createDailyPokemonTable(Batch batch) {
     batch.execute('''
-    CREATE TABLE daily_pokemon_table (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      pokemon_id INTEGER NOT NULL,
-      name TEXT NOT NULL,
-      hp INTEGER,
-      attack INTEGER,
-      defense INTEGER,
-      sp_attack INTEGER,
-      sp_defense INTEGER,
-      speed INTEGER,
-      type1 TEXT,
-      type2 TEXT,
-      data TEXT
+    CREATE TABLE ${DailyPokemonDbContract.tableName} (
+      ${DailyPokemonDbContract.idColumn} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${DailyPokemonDbContract.pokemonIdColumn} INTEGER NOT NULL,
+      ${DailyPokemonDbContract.nameColumn} TEXT NOT NULL,
+      ${DailyPokemonDbContract.hpColumn} INTEGER,
+      ${DailyPokemonDbContract.attackColumn} INTEGER,
+      ${DailyPokemonDbContract.defenseColumn} INTEGER,
+      ${DailyPokemonDbContract.spAttackColumn} INTEGER,
+      ${DailyPokemonDbContract.spDefenseColumn} INTEGER,
+      ${DailyPokemonDbContract.speedColumn} INTEGER,
+      ${DailyPokemonDbContract.type1Column} TEXT,
+      ${DailyPokemonDbContract.type2Column} TEXT,
+      ${DailyPokemonDbContract.dateColumn} TEXT NOT NULL
     );
-  ''');
+    ''');
   }
 }

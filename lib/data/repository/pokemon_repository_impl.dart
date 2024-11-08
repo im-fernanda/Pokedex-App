@@ -50,7 +50,7 @@ class PokemonRepositoryImpl implements IPokemonRepository {
   Future<Pokemon> pokemonOfTheDay() async {
     try {
       print("Entrou em pokemonoftheday");
-      String dataAtual = DateFormat('dd-MM-yyyy').format(DateTime.now());
+      String dataAtual = "07-11-2024";
 
       // Verifica se já existe um Porkémon do dia para hoje
       final dailyPokemon = await capturedPokemonDao.getDailyPokemon();
@@ -97,8 +97,8 @@ class PokemonRepositoryImpl implements IPokemonRepository {
   }
 
   // Método para capturar Pokémon
-  Future<void> capturePokemon(int pokemonId) async {
-    await capturedPokemonDao.capturePokemon(pokemonId);
+  Future<void> capturePokemonRepository(Pokemon pokemon) async {
+    await capturedPokemonDao.capturePokemon(pokemon);
   }
 
   // Método para liberar Pokémon
@@ -109,20 +109,10 @@ class PokemonRepositoryImpl implements IPokemonRepository {
   // Método para obter todos os Pokémons capturados
   Future<List<Pokemon>> getCapturedPokemons() async {
     try {
-      // Pega todos os ids dos capturados
-      final capturedIds = await capturedPokemonDao.getCapturedPokemonIds();
-      // Seleciona todos os Pokémons do banco
-      final pokemonEntities = await pokemonDao.selectAll();
-      // Cria uma instância do mapper para converter as entidades
-      final databaseMapper = DatabaseMapper();
+      // Obtém todas as entidades de Pokémon diretamente da tabela
+      final capturedPokemonEntities = await pokemonDao.getAllCapturedPokemons();
 
-      // Filtra os Pokémons capturados no formato do banco e mapeia para objetos Pokemon
-      final capturedPokemons = pokemonEntities
-          .where((entity) => capturedIds.contains(entity.id))
-          .map((entity) => databaseMapper.toPokemon(entity))
-          .toList();
-
-      return capturedPokemons;
+      return capturedPokemonEntities;
     } catch (e) {
       print('Erro ao buscar Pokémon capturados: $e');
       throw Exception('Falha ao buscar Pokémon capturados');

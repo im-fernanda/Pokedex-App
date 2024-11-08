@@ -65,6 +65,7 @@ abstract class PokemonDatabaseContract {
 
 abstract class DailyPokemonDbContract {
   static const String tableName = "daily_pokemon_table";
+  static const String idColumn = "id";
   static const String pokemonIdColumn = "pokemon_id";
   static const String nameColumn = "name";
   static const String type1Column = "type1";

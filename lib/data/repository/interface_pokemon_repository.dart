@@ -7,7 +7,7 @@ abstract class IPokemonRepository {
   Future<Pokemon> pokemonOfTheDay();
 
   // Método para capturar Pokémon
-  Future<void> capturePokemon(int pokemonId);
+  Future<void> capturePokemonRepository(Pokemon pokemon);
 
   // Método para liberar Pokémon
   Future<void> releasePokemon(int pokemonId);

@@ -101,13 +101,13 @@ class _EncontroDiarioPageState extends State<EncontroDiarioPage> {
         desc: 'Você realmente deseja capturar ${pokemon.name}?',
         btnCancelOnPress: () {},
         btnOkOnPress: () async {
-          await capturedPokemonDao.capturePokemon(pokemon.id);
+          await capturedPokemonDao.capturePokemon(pokemon);
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('${pokemon.name} foi capturado!'),
               behavior: SnackBarBehavior.floating,
-              margin: const EdgeInsets.only(bottom: 500, left: 20),
+              margin: const EdgeInsets.only(bottom: 50, left: 20),
             ),
           );
 

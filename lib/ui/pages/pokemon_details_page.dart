@@ -43,7 +43,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     if (_isCaptured) {
       _showReleaseConfirmationDialog(capturedPokemonDao);
     } else {
-      await capturedPokemonDao.capturePokemon(widget.pokemon.id);
+      await capturedPokemonDao.capturePokemon(widget.pokemon);
       setState(() {
         _isCaptured = true;
       });
@@ -66,7 +66,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
           SnackBar(
             content: Text('${widget.pokemon.name} foi solto!'),
             behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(bottom: 500, left: 20),
+            margin: const EdgeInsets.only(bottom: 50, left: 20),
           ),
         );
 

@@ -2,7 +2,6 @@ import 'package:pokedex_app/data/database/dao/base_dao.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../domain/pokemon.dart';
-import '../database_mapper.dart';
 import '../entity/pokemon_database_entity.dart';
 
 class CapturedPokemonDao extends BaseDao {
@@ -24,15 +23,31 @@ class CapturedPokemonDao extends BaseDao {
   }
 
   // Método para captura
-  Future<void> capturePokemon(int pokemonId) async {
-    final isCaptured = await isPokemonCaptured(pokemonId);
+  Future<bool> capturePokemon(Pokemon pokemon) async {
+    final isCaptured = await isPokemonCaptured(pokemon.id);
+
     if (!isCaptured) {
       final Database db = await getDb();
       await db.insert(
-        'captured_pokemon_table',
-        {'pokemon_id': pokemonId},
+        CapturedPokemonDbContract.capturedPokemonTable,
+        {
+          CapturedPokemonDbContract.pokemonIdColumn: pokemon.id,
+          CapturedPokemonDbContract.nameColumn: pokemon.name,
+          CapturedPokemonDbContract.hpColumn: pokemon.base.hp,
+          CapturedPokemonDbContract.attackColumn: pokemon.base.attack,
+          CapturedPokemonDbContract.defenseColumn: pokemon.base.defense,
+          CapturedPokemonDbContract.spAttackColumn: pokemon.base.spAttack,
+          CapturedPokemonDbContract.spDefenseColumn: pokemon.base.spDefense,
+          CapturedPokemonDbContract.speedColumn: pokemon.base.speed,
+          CapturedPokemonDbContract.type1Column: pokemon.type[0],
+          CapturedPokemonDbContract.type2Column:
+              pokemon.type.length > 1 ? pokemon.type[1] : null,
+        },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+      return true; // Indica que a captura foi bem-sucedida
+    } else {
+      return false; // Indica que o Pokémon já estava capturado
     }
   }
 
@@ -96,7 +111,16 @@ class CapturedPokemonDao extends BaseDao {
 }
 
 abstract class CapturedPokemonDbContract {
-  static const String captured_pokemon_table = "captured_pokemon_table";
+  static const String capturedPokemonTable = "captured_pokemon_table";
   static const String idColumn = 'id';
   static const String pokemonIdColumn = 'pokemon_id';
+  static const String nameColumn = 'name';
+  static const String hpColumn = 'hp';
+  static const String attackColumn = 'attack';
+  static const String defenseColumn = 'defense';
+  static const String spAttackColumn = 'sp_attack';
+  static const String spDefenseColumn = 'sp_defense';
+  static const String speedColumn = 'speed';
+  static const String type1Column = 'type1';
+  static const String type2Column = 'type2';
 }

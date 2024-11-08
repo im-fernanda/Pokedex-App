@@ -2,7 +2,12 @@ import 'package:pokedex_app/data/database/dao/base_dao.dart';
 import 'package:pokedex_app/data/database/entity/pokemon_database_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../../domain/pokemon.dart';
+import '../database_mapper.dart';
+import 'captured_pokemon_dao.dart';
+
 class PokemonDao extends BaseDao {
+  final databaseMapper = DatabaseMapper();
   // Seleciona todos os Pokémons para listagem com paginação
   Future<List<PokemonDatabaseEntity>> selectAll({
     int? limit, // Número máximo de resultados
@@ -45,5 +50,41 @@ class PokemonDao extends BaseDao {
   Future<void> deleteAll() async {
     final Database db = await getDb();
     await db.delete(PokemonDatabaseContract.pokemonTable);
+  }
+
+  // Método para obter todos os Pokémon capturados
+  Future<List<Pokemon>> getAllCapturedPokemons() async {
+    final Database db = await getDb();
+
+    try {
+      // Executa uma consulta SQL direta para buscar todos os dados da tabela
+      final List<Map<String, dynamic>> pokemonsDb = await db.rawQuery(
+          'SELECT * FROM ${CapturedPokemonDbContract.capturedPokemonTable}');
+
+      // Mapeia os resultados da consulta para a lista de PokemonDatabaseEntity
+      final List<PokemonDatabaseEntity> pokemonEntities = pokemonsDb.map((row) {
+        return PokemonDatabaseEntity(
+          id: row['pokemon_id'],
+          name: row['name'],
+          type1: row['type1'],
+          type2: row['type2'],
+          hp: row['hp'],
+          attack: row['attack'],
+          defense: row['defense'],
+          spAttack: row['sp_attack'],
+          spDefense: row['sp_defense'],
+          speed: row['speed'],
+        );
+      }).toList();
+
+      // Converte as entidades para objetos Pokemon
+      final pokemons = databaseMapper.toPokemons(pokemonEntities);
+
+      // Retorna uma lista de nomes dos Pokémon capturados
+      return pokemons;
+    } catch (e) {
+      print('Erro ao buscar todos os Pokémon capturados: $e');
+      throw Exception('Falha ao buscar Pokémon capturados');
+    }
   }
 }

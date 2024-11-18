@@ -16,10 +16,10 @@
 </p>
 
 <p align="justify">
-é um aplicativo Flutter que simula uma Pokédex funcional, utilizando Material Design 3, banco de dados local com Sqflite e interações visuais aprimoradas com Awesome Dialogs. O projeto foi desenvolvido com o objetivo de explorar conceitos de Flutter, gerenciamento de estado e persistência de dados.
+Aplicativo Flutter que simula uma Pokédex funcional, utilizando Material Design 3, banco de dados local com Sqflite e interações visuais aprimoradas com Awesome Dialogs. O projeto foi desenvolvido com o objetivo de explorar conceitos de Flutter, gerenciamento de estado e persistência de dados.
 </p>
 
----
+---  
 
 <h2 id="started">🚀 Getting Started</h2>
 
@@ -29,9 +29,21 @@
    git clone https://github.com/im-fernanda/pokedex-app.git
    cd pokedex-app
 3. Instale as dependências do projeto:
-  ```bash
-  flutter pub get
+    ```bash
+    flutter pub get
+4. Execute o aplicativo em um dispositivo físico ou emulador:
+    ```bash  
+    flutter run
 
-4. Execute o aplicativo em um dispositivo físico ou emulador
-```bash
-  flutter run
+<h2 id="features">✨ Features</h2>
+<p>📂 Pokedex: Lista de todos os pokémons até o id 809. </p>
+
+<p>🔍 Encontro Diário: Um Pokémon é sorteado diariamente para que você tenha a oportunidade de capturá-lo.</p>
+
+<p>🗂️ Meus Pokémon: Pokémon capturados e armazenados na sua Pokédex (limite de 6).</p>
+
+<h2 id="database">🗄️ Database </h2>
+
+O aplicativo utiliza o pacote sqflite para persistência local. O banco de dados possui tabelas para armazenar informações sobre Pokémon e seus status de captura.
+
+

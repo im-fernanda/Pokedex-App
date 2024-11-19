@@ -1,13 +1,10 @@
 [FLUTTER_BADGE]: https://img.shields.io/badge/flutter-%2302569B.svg?style=for-the-badge&logo=flutter&logoColor=white
 [DART_BADGE]: https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white
 [SQFLITE_BADGE]: https://img.shields.io/badge/sqflite-%2312100E.svg?style=for-the-badge&logo=sqlite&logoColor=white
+[AWESOME_DIALOG_BADGE]: https://img.shields.io/badge/awesome--dialog-%23FF4500.svg?style=for-the-badge
+
 
 <h1 align="center" style="font-weight: bold;"> Pokédex Mobile </h1>
-
-![flutter][FLUTTER_BADGE]
-![dart][DART_BADGE]
-![sqflite][SQFLITE_BADGE]
-
 
 <p align="center">
   <a href="#started">Getting Started</a> • 
@@ -16,10 +13,22 @@
 </p>
 
 <p align="justify">
-Aplicativo Flutter que simula uma Pokédex funcional, utilizando Material Design 3, banco de dados local com Sqflite e interações visuais aprimoradas com Awesome Dialogs. O projeto foi desenvolvido com o objetivo de explorar conceitos de Flutter, gerenciamento de estado e persistência de dados.
+Aplicativo Flutter que simula uma Pokédex funcional, utilizando Material Design 3, banco de dados local e interações visuais. O projeto foi desenvolvido com o objetivo de explorar conceitos de Flutter, gerenciamento de estado e persistência de dados.
 </p>
 
 ---  
+
+<h2 id="tech">🛠️ Tecnologias Utilizadas</h2>
+
+![dart][DART_BADGE] : Linguagem de programação utilizada.
+
+![flutter][FLUTTER_BADGE]: Para o desenvolvimento de interfaces multiplataforma.
+
+![sqflite][SQFLITE_BADGE] : Gerenciamento de banco de dados local.
+
+![awesome_dialog][AWESOME_DIALOG_BADGE]: Diálogos visuais personalizados.
+
+---
 
 <h2 id="started">🚀 Getting Started</h2>
 
@@ -41,6 +50,8 @@ Aplicativo Flutter que simula uma Pokédex funcional, utilizando Material Design
 <p>🔍 Encontro Diário: Um Pokémon é sorteado diariamente para que você tenha a oportunidade de capturá-lo.</p>
 
 <p>🗂️ Meus Pokémon: Pokémon capturados e armazenados na sua Pokédex (limite de 6).</p>
+
+
 
 <h2 id="database">🗄️ Database </h2>
 

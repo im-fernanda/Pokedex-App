@@ -6,6 +6,7 @@
 
 <h1 align="center" style="font-weight: bold;"> Pokédex Mobile </h1>
 
+
 <p align="center">
   <a href="#started">Getting Started</a> • 
   <a href="#features">Features</a> • 
@@ -15,6 +16,12 @@
 <p align="justify">
 Aplicativo Flutter que simula uma Pokédex funcional, utilizando Material Design 3, banco de dados local e interações visuais. O projeto foi desenvolvido com o objetivo de explorar conceitos de Flutter, gerenciamento de estado e persistência de dados.
 </p>
+
+
+https://github.com/user-attachments/assets/42265e56-a69d-4889-87dc-2448f68e2a30
+
+
+
 
 ---  
 
